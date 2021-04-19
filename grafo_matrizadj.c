@@ -32,4 +32,6 @@ bool inicializaGrafo(Grafo* grafo, int nv){
       grafo->mat[i][j] = AN;
     }
   }
+
+  return true;
 };
