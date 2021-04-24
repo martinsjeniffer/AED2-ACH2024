@@ -11,7 +11,7 @@ typedef struct {
 } Grafo;
 
 /*
- * bool inicializaGrafo(Grafo* grafo, int nv): 
+ * bool inicializaGrafo(Grafo* grafo, int nv):
  * 
  * Inicializa um grafo com nv vertices.
  * Preenche as celulas com AN (representando a ausencia de arestas).
