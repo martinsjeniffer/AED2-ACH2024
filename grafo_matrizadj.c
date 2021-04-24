@@ -28,7 +28,7 @@ bool inicializaGrafo(Grafo* grafo, int nv){
   grafo->numArestas = 0;
 
   for (i = 0; i <= grafo->numVertices; i++) {
-    for (j = 0; j <= grafo->numArestas; j++) {
+    for (j = 0; j <= grafo->numVertices; j++) {
       grafo->mat[i][j] = AN;
     }
   }
