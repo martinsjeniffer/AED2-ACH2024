@@ -27,7 +27,6 @@ void insereAresta(Grafo * grafo) {
 /*
  * bool existeAresta(Grafo * grafo):
  * 
- * Retorna true se existe a aresta e false caso contrário
  */
 bool existeAresta(Grafo * grafo) {
   return true;

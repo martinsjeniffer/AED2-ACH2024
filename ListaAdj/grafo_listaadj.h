@@ -1,6 +1,5 @@
 #include <stdbool.h> /* Para utilizarmos o bool como "true" ou "false" */
 
-#define MAXNUMVERTICES 100
 #define AN -1 /* Aresta nula */
 #define VERTICE_INVALIDO -1 /* numero de vertice invalido ou ausente */
 
@@ -18,7 +17,6 @@ typedef struct {
     struct str_aresta * prox;
 } Aresta;
 
-
 /*
  * Tipo estruturado Grafo
  *      listaAdj: vetor de arestas ligadas (cada posicao i contem o ponteiro
@@ -31,7 +29,6 @@ typedef struct {
     int numVertices;
     int numArestas;
 } Grafo;
-
 
 /*
  * bool inicializaGrafo(Grafo* grafo): 
