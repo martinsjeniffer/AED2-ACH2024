@@ -122,7 +122,7 @@ bool listaAdjVazia(Grafo * grafo, int vertice) {
 int proxListaAdj(Grafo * grafo, int vertice, int atual) {
   if (listaAdjVazia(grafo, vertice)) return VERTICE_INVALIDO;
 
-  for (i = atual + 1; i <= grafo->numVertices; i++) 
+  for (int i = atual + 1; i <= grafo->numVertices; i++)
     if (grafo->mat[vertice][i] != AN) return i;
 
   return VERTICE_INVALIDO;
