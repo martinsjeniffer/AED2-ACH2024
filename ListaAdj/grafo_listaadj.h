@@ -54,19 +54,19 @@ bool verticeValido(Grafo * grafo, int v);
  * void insereAresta(Grafo * grafo):
  * 
  */
-void insereAresta(Grafo * grafo);
+void insereAresta(Grafo * grafo, int v1, int v2, Peso peso);
 
 /*
  * bool existeAresta(Grafo * grafo):
  * 
  */
-bool existeAresta(Grafo * grafo);
+bool existeAresta(Grafo * grafo, int v1, int v2);
 
 /*
  * bool removeAresta(Grafo * grafo):
  * 
  */
-bool removeAresta(Grafo * grafo);
+bool removeAresta(Grafo * grafo, int v1, int v2, Peso * peso);
 
 /*
  * bool listaAdjVazia(Grafo * grafo, int v):
@@ -88,3 +88,5 @@ Apontador primeiroListaAdj(Grafo * grafo, int v);
  *      na primeira chamada retorna o primeiro.
  */
 Apontador proxListaAdj(Grafo * grafo, int v, Aresta * atual);
+
+void liberaGrafo(Grafo * grafo);

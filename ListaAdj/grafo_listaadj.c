@@ -38,26 +38,78 @@ bool verticeValido(Grafo * grafo, int vertice) {
 }
 
 /*
- * void insereAresta(Grafo * grafo):
- * 
+ * void insereAresta(Grafo * grafo, int v1, int v2, Peso peso):
+ *    insere a aresta (v1, v2) com peso "peso" no grafo.
+ *    nao verifica se a aresta ja existia (isso deve ser feito pelo
+ *    usuario antes, se necessario)
  */
-void insereAresta(Grafo * grafo) {
+void insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
+  Apontador novaAresta;
+
+  if (!verticeValido(grafo, v1) && !verticeValido(grafo, v2)) return;
+  if (!(novaAresta = (Apontador) calloc(1, sizeof(Apontador)))) {
+    fprintf(stderr, "ERRO: Falha na alocacao de memoria na \
+      funcao insereAresta\n");
+    return;
+  }
+
+  novaAresta->vdest = v2;
+  novaAresta->peso = peso;
+  novaAresta->prox = grafo->listaAdj[v1];
+  /*
+   * novaAresta entra em PRIMEIRO, e nao na ultima posicao
+   * assim a implementacao fica com O(1);
+   */
+  grafo->listaAdj[v1] = novaAresta;
+
+  grafo->numArestas++;
 }
 
 /*
- * bool existeAresta(Grafo * grafo):
+ * bool existeAresta(Grafo * grafo, int v1, int v2):
  * 
  */
-bool existeAresta(Grafo * grafo) {
-  return true;
+bool existeAresta(Grafo * grafo, int v1, int v2) {
+  Apontador aresta;
+
+  if (!verticeValido(grafo, v1) && !verticeValido(grafo, v2)) return false;
+  aresta = grafo->listaAdj[v1];
+
+  while (aresta != NULL && aresta->vdest != v2)
+    aresta = aresta -> prox;
+
+  if (aresta != NULL) return true;
+  return false;
 }
 
 /*
- * bool removeAresta(Grafo * grafo
- * 
+ * bool removeAresta(Grafo * grafo, int v1, int v2)
+ *    retorna false se a aresta ja nao existia
  */
-bool removeAresta(Grafo * grafo) {
-  return true;
+bool removeAresta(Grafo * grafo, int v1, int v2, Peso * peso) {
+  if (!existeAresta(grafo, v1, v2)) return false;
+
+  Apontador atual, ant;
+  atual = grafo->listaAdj[v1];
+
+  while (atual != NULL && atual->vdest != v2) {
+    ant = atual;
+    atual = atual->prox;
+  }
+
+  if (atual != NULL) {
+    if (grafo->listaAdj[v1] == atual) grafo->listaAdj[v1] = atual->prox;
+    else ant->prox = atual->prox;
+
+    *peso = atual->peso;
+    atual->prox = NULL;
+    free(atual);
+    atual = NULL; // boa pratica
+    grafo->numArestas--;
+    return true;
+  }
+
+  return false;
 }
 
 bool listaAdjVazia(Grafo * grafo, int v) {
@@ -71,11 +123,27 @@ Apontador primeiroListaAdj(Grafo * grafo, int v) {
 }
 
 Apontador proxListaAdj(Grafo * grafo, int v, Apontador atual) {
-  if (listaAdjVazia(grafo, v)) return VERTICE_INVALIDO;
   if (atual == NULL) {
     fprintf(stderr, "ERRO: Aresta atual eh NULL");
     return false;
   }
 
   return (atual -> prox);
+}
+
+void liberaGrafo(Grafo * grafo) {
+  int vertice;
+  Apontador aresta;
+
+  for (vertice = 0; vertice <= grafo->numVertices; vertice++)
+    while ((aresta = grafo->listaAdj[vertice]) != NULL) {
+      grafo->listaAdj[vertice] = aresta->prox;
+      aresta->prox = NULL;
+      free(aresta);
+    }
+
+  grafo->numVertices = 0;
+  free(grafo->listaAdj); // pois o vetor tb tem alocacao dinamica
+  grafo->listaAdj = NULL;
+
 }
