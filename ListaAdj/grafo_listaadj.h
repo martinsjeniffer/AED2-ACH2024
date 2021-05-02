@@ -11,7 +11,7 @@ typedef int Peso;
  *      peso: peso da aresta
  *      str_aresta: ponteiro para a prox aresta
  */
-typedef struct {
+typedef struct str_aresta {
     int vdest;
     Peso peso;
     struct str_aresta * prox;
