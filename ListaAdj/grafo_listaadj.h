@@ -17,6 +17,8 @@ typedef struct str_aresta {
     struct str_aresta * prox;
 } Aresta;
 
+typedef Aresta * Apontador;
+
 /*
  * Tipo estruturado Grafo
  *      listaAdj: vetor de arestas ligadas (cada posicao i contem o ponteiro
@@ -25,7 +27,7 @@ typedef struct str_aresta {
  *      numArestas: numero total de arestas
  */
 typedef struct {
-    Aresta ** listaAdj;
+    Apontador * listaAdj;
     int numVertices;
     int numArestas;
 } Grafo;
@@ -74,7 +76,15 @@ bool removeAresta(Grafo * grafo);
 bool listaAdjVazia(Grafo * grafo, int v);
 
 /*
- * int proxListaAdj(Grafo * grafo):
- * 
+ * Aresta * primeiroListaAdj(Grafo * grafo, int v):
+ *      returna o endereco do primeiro vertice adjacente a v
  */
-int proxListaAdj(Grafo * grafo);
+Apontador primeiroListaAdj(Grafo * grafo, int v);
+
+/*
+ * Aresta * proxListaAdj(Grafo * grafo, int v, Aresta * atual):
+ *      retorna o proximo vertice adjacente de um dado vertice 
+ *      (proximo em relacao a um adjacente "atual", passado como parametro)
+ *      na primeira chamada retorna o primeiro.
+ */
+Apontador proxListaAdj(Grafo * grafo, int v, Aresta * atual);

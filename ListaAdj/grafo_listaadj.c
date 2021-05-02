@@ -11,7 +11,7 @@ bool inicializaGrafo(Grafo* grafo, int nv){
 
   grafo->numVertices = nv;
 
-  if (!(grafo->listaAdj = (Aresta**) calloc(nv + 1, sizeof(Aresta*)))) {
+  if (!(grafo->listaAdj = (Apontador*) calloc(nv + 1, sizeof(Apontador)))) {
     fprintf(stderr, "ERRO: Falha na alocacao de memoria na \
       funcao inicializaGrafo\n");
     return false;
@@ -66,10 +66,16 @@ bool listaAdjVazia(Grafo * grafo, int v) {
   return (grafo->listaAdj[v] == NULL);
 }
 
-/*
- * int proxListaAdj(Grafo * grafo):
- * 
- */
-int proxListaAdj(Grafo * grafo) {
-  return VERTICE_INVALIDO;
+Apontador primeiroListaAdj(Grafo * grafo, int v) {
+  return (grafo->listaAdj[v]);
+}
+
+Apontador proxListaAdj(Grafo * grafo, int v, Apontador atual) {
+  if (listaAdjVazia(grafo, v)) return VERTICE_INVALIDO;
+  if (atual == NULL) {
+    fprintf(stderr, "ERRO: Aresta atual eh NULL");
+    return false;
+  }
+
+  return (atual -> prox);
 }

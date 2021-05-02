@@ -119,7 +119,7 @@ bool listaAdjVazia(Grafo * grafo, int vertice) {
  * sem um novo proximo
  */
 // minha versao
-int proxListaAdj(Grafo * grafo, int vertice, int atual) {
+Apontador proxListaAdj(Grafo * grafo, int vertice, int atual) {
   if (listaAdjVazia(grafo, vertice)) return VERTICE_INVALIDO;
 
   for (int i = atual + 1; i <= grafo->numVertices; i++)
@@ -130,7 +130,7 @@ int proxListaAdj(Grafo * grafo, int vertice, int atual) {
 
 // versao professora
 /*
-int proxListaAdj(Grafo * grafo, int vertice, int atual) {
+Apontador proxListaAdj(Grafo * grafo, int vertice, int atual) {
   if (verticeValido(grafo, vertice)) return VERTICE_INVALIDO;
 
   atual++;

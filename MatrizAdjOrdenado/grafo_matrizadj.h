@@ -11,6 +11,8 @@ typedef struct {
     int numArestas;
 } Grafo;
 
+typedef int Apontador;
+
 /*
  * bool inicializaGrafo(Grafo* grafo, int nv): 
  * 
@@ -67,4 +69,4 @@ bool listaAdjVazia(Grafo * grafo, int vertice);
  * adjacente a v ou -1 se a lista de adjacencia tiver terminado
  * sem um novo proximo
  */
-int proxListaAdj(Grafo * grafo, int vertice, int atual);
+Apontador proxListaAdj(Grafo * grafo, int vertice, int atual);
