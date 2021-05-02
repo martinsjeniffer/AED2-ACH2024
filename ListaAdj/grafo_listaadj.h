@@ -51,20 +51,22 @@ bool inicializaGrafo(Grafo * grafo, int nv);
 bool verticeValido(Grafo * grafo, int v);
 
 /*
- * void insereAresta(Grafo * grafo):
- * 
+ * void insereAresta(Grafo * grafo, int v1, int v2, Peso peso):
+ *    insere a aresta (v1, v2) com peso "peso" no grafo.
+ *    nao verifica se a aresta ja existia (isso deve ser feito pelo
+ *    usuario antes, se necessario)
  */
 void insereAresta(Grafo * grafo, int v1, int v2, Peso peso);
 
 /*
- * bool existeAresta(Grafo * grafo):
+ * bool existeAresta(Grafo * grafo, int v1, int v2):
  * 
  */
 bool existeAresta(Grafo * grafo, int v1, int v2);
 
 /*
- * bool removeAresta(Grafo * grafo):
- * 
+ * bool removeAresta(Grafo * grafo, int v1, int v2)
+ *    retorna false se a aresta ja nao existia
  */
 bool removeAresta(Grafo * grafo, int v1, int v2, Peso * peso);
 
