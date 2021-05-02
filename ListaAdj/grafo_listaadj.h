@@ -25,22 +25,28 @@ typedef struct str_aresta {
  *      numArestas: numero total de arestas
  */
 typedef struct {
-    Aresta * listaAdj;
+    Aresta ** listaAdj;
     int numVertices;
     int numArestas;
 } Grafo;
 
 /*
- * bool inicializaGrafo(Grafo* grafo): 
+ * bool inicializaGrafo(Grafo* grafo, int nv):
+ *      Cria um grafo com nv vcrtices
+ *      Aloca espaco para o vetor de apontadores de listas de adjacencias
+ *      e, para cada vertice, inicializa o apontador de sua lista de adjacencia
  * 
+ *      Retorna true se houver sucesso e false caso contrario
+ *      Vertices vao de 1 a nv.
  */
-bool inicializaGrafo(Grafo * grafo);
+bool inicializaGrafo(Grafo * grafo, int nv);
 
 /*
- * bool verticeValido(Grafo * grafo):
+ * bool verticeValido(Grafo * grafo, int vertice):
  * 
+ * Verifica que o numero do vertice eh valido no grafo.
  */
-bool verticeValido(Grafo * grafo);
+bool verticeValido(Grafo * grafo, int v);
 
 /*
  * void insereAresta(Grafo * grafo):
@@ -61,9 +67,11 @@ bool existeAresta(Grafo * grafo);
 bool removeAresta(Grafo * grafo);
 
 /*
- * bool listaAdjVazia(Grafo * grafo)
+ * bool listaAdjVazia(Grafo * grafo, int v):
+ *      true se a lista de adjacentes de um dado vertice
+ *      eh vazia, false caso contrario
  */
-bool listaAdjVazia(Grafo * grafo);
+bool listaAdjVazia(Grafo * grafo, int v);
 
 /*
  * int proxListaAdj(Grafo * grafo):
