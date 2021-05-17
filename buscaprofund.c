@@ -40,7 +40,7 @@ void buscaProfundidade(Grafo* grafo) {
        if (cor[v] == BRANCO) visitaBP(v, grafo, &tempo, cor, tdesc, tterm, antecessor);
 }
 
-void visitaBP(int v, Grafo * grafo, int * tempo, int * cor[], int * tdesc[], int * tterm[], int * antecessor[]) {
+void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[]) {
     cor[v] = CINZA;
     tdesc[v] = ++(*tempo);
 
