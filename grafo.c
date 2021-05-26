@@ -127,7 +127,7 @@ void imprimeGrafo(Grafo* grafo) {
     
     for (i = 0; i < grafo->numVertices; i++) {
         if(!grafo->listaAdj[i]) {
-            printf ("%d %d", i, grafo->listaAdj[i]);
+            printf ("%d %s", i, grafo->listaAdj[i]);
         }
         else {
             printf ("%d %d %d", i, grafo->listaAdj[i]->verticeDestino, grafo->listaAdj[i]->peso);
