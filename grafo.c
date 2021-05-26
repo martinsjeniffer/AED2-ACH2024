@@ -7,7 +7,7 @@
 #include "grafo.h"
 
 bool verificaVertice(int vertice, Grafo* grafo) {
-    if(vertice <= 0) {
+    if(vertice < 0) {
         fprintf(stderr, "ERRO: O número de vértices deve ser positivo.\n");
         return false;
     }
@@ -24,6 +24,10 @@ bool inicializaGrafo(Grafo *grafo, int numVertices) {
     if(!(grafo->listaAdj = (Apontador*) calloc(numVertices + 1, sizeof(Apontador)))) {
         fprintf(stderr, "ERRO: Falha na alocação de memória na função inicializaGrafo.\n");
         return false;
+    }
+
+    for(i = 0; i < grafo->numVertices; i++) {
+        grafo->listaAdj[i] = NULL;
     }
 
     grafo->numArestas = 0;
@@ -120,8 +124,14 @@ void imprimeGrafo(Grafo* grafo) {
     int i;
     
     printf("%d %d \n", grafo->numVertices, grafo->numArestas);
+    
     for (i = 0; i < grafo->numVertices; i++) {
-        printf ("%d %d", i, grafo->listaAdj[i]->verticeDestino);
+        if(!grafo->listaAdj[i]) {
+            printf ("%d %d", i, grafo->listaAdj[i]);
+        }
+        else {
+            printf ("%d %d %d", i, grafo->listaAdj[i]->verticeDestino, grafo->listaAdj[i]->peso);
+        }
         printf("\n");
     }
 
