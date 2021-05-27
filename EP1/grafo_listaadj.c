@@ -67,7 +67,7 @@ void insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
   // novaAresta->prox = grafo->listaAdj[v2];
   // grafo->listaAdj[v2] = novaAresta;
 
-  grafo->numArestas++;
+  if (!existeAresta(grafo, v2, v1)) grafo->numArestas++;
 }
 
 bool existeAresta(Grafo * grafo, int v1, int v2) {

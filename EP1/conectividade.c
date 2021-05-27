@@ -20,6 +20,7 @@ void leGrafo(FILE * arquivoGrafo, Grafo* grafo) {
 
   while(fscanf(arquivoGrafo, "%d %d %d", &v1, &v2, &peso) != EOF) {
     insereAresta(grafo, v1, v2, peso);
+    insereAresta(grafo, v2, v1, peso);
   }
 
   fclose(arquivoGrafo);
