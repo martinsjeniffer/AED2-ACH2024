@@ -41,9 +41,20 @@ bool verticeValido(Grafo * grafo, int vertice) {
 void insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
   Apontador novaAresta;
 
+  if(v1 == v2){
+    fprintf(stderr, "ERRO em insereAresta: Grafo nao direcionado nao tem self-loop.\n");
+    return;
+  } 
+
   if (!verticeValido(grafo, v1) && !verticeValido(grafo, v2)) return;
+
+  if (existeAresta(grafo, v1, v2)) {
+    fprintf(stderr, "ERRO em insereAresta: A aresta (%d,%d) ja existe.\n", v1, v2);
+    return;
+  }
+
   if (!(novaAresta = (Apontador) calloc(1, sizeof(Apontador)))) {
-    fprintf(stderr, "ERRO: Falha na alocacao de memoria na \
+    fprintf(stderr, "ERRO em insereAresta: Falha na alocacao de memoria na \
       funcao insereAresta\n");
     return;
   }
@@ -51,11 +62,10 @@ void insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
   novaAresta->vdest = v2;
   novaAresta->peso = peso;
   novaAresta->prox = grafo->listaAdj[v1];
-  /*
-   * novaAresta entra em PRIMEIRO, e nao na ultima posicao
-   * assim a implementacao fica com O(1);
-   */
   grafo->listaAdj[v1] = novaAresta;
+
+  // novaAresta->prox = grafo->listaAdj[v2];
+  // grafo->listaAdj[v2] = novaAresta;
 
   grafo->numArestas++;
 }
