@@ -134,3 +134,22 @@ void liberaGrafo(Grafo * grafo) {
   grafo->listaAdj = NULL;
 
 }
+
+void imprimeGrafo(Grafo* grafo) {
+  Apontador atual;
+  printf("\n%d %d", grafo->numVertices, grafo->numArestas);
+  
+  for (int i = 0; i < grafo->numVertices; i++) {
+    atual = grafo->listaAdj[i];
+
+    if (!grafo->listaAdj[i]) printf ("\n%d %s", i, atual);
+    else {
+      while(atual != NULL) {
+        printf ("\n%d %d %d", i, atual->vdest, atual->peso);
+        atual = atual -> prox;
+      }
+    }
+  }
+
+  return;
+}

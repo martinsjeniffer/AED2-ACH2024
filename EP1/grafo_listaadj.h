@@ -92,3 +92,5 @@ Apontador primeiroListaAdj(Grafo * grafo, int v);
 Apontador proxListaAdj(Grafo * grafo, int v, Aresta * atual);
 
 void liberaGrafo(Grafo * grafo);
+
+void imprimeGrafo(Grafo* grafo);
