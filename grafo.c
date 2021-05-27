@@ -80,44 +80,33 @@ Apontador proxListaAdj(int v, Grafo* grafo, Apontador atual) {
 }
 
  void leGrafo(char* nomearq, Grafo* grafo) {
-    // FILE *arquivoGrafo;
-    // int nVertices, nArestas;
-    // int v1, v2;
-    // Peso peso;
-    // int idArquivo;
+    FILE * arquivoGrafo;
+    int nVertices, nArestas;
+    int v1, v2;
+    Peso peso;
 
-    // arquivoGrafo = fopen(nomearq, "r");
-   
-    // if(arquivoGrafo == NULL) {
-    //     fprintf(stderr, "O arquivo não existe!");
-    //     return;
-    // }
+    arquivoGrafo = fopen(nomearq, "r");
+    if(arquivoGrafo == NULL) {
+        fprintf(stderr, "O arquivo não existe!");
+        return;
+    }
 
-    // if(fscanf(arquivoGrafo, "%d %d", &nVertices, &nArestas) != 2) {
-    //     fprintf(stderr, "Erro no grafo");
-    //     return;
-    // }
-    
-    // fscanf(arquivoGrafo, "%d %d", &nVertices, &nArestas);
+    if (!fscanf(arquivoGrafo, "%d %d", &nVertices, &nArestas)) {
+        fprintf(stderr, "Problemas ao ler nVertices e nArestas");
+        return;
+    }
+
+    printf("\n nVertices nArestas: %d %d\n", nVertices, nArestas);
 
     // inicializaGrafo(grafo, nVertices);
 
-    //  for (idArquivo = 0; idArquivo < grafo->listaAdj[i]; idArquivo++){
-    //     while (fscanf (fGrafo,"%d",&nVertices) != EOF) {
-    //         insereAresta(grafo, v1, v2, peso);
-    //         fscanf(fGrafo,"%d",&nVertices);
-    //      }
-    // }
+    while(fscanf(arquivoGrafo, "%d %d %d", &v1, &v2, &peso) != EOF) {
+        printf("\n v1: %d v2: %d peso: %d", v1, v2, peso);
+        // insereAresta(grafo, v1, v2, peso);
+    }
 
-   
-    // fscanf(fGrafo,"%d", &v1);
-    // fscanf(fGrafo,"%d", &v2);
-    // printf("%d %d", nVertices, nArestas);
-    // printf("\n%d %d", v1, v2);
-
-    // fclose(fGrafo);
-    // system("pause");
-    // return;
+    fclose(arquivoGrafo);
+    return;
 }
 
 void imprimeGrafo(Grafo* grafo) {

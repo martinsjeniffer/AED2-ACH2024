@@ -10,11 +10,7 @@
 int main() {
     Grafo grafo;
     inicializaGrafo(&grafo, 5);
-    insereAresta(&grafo, 0, 2, 1);
-    insereAresta(&grafo, 1, 2, 1);
-    insereAresta(&grafo, 2, 4, 1);
-    imprimeGrafo(&grafo);
-
+    leGrafo("entrada.txt", &grafo);
     return 0;
 }
 
