@@ -152,8 +152,8 @@ void imprimeGrafo(Grafo* grafo) {
   for (int i = 0; i < grafo->numVertices; i++) {
     atual = grafo->listaAdj[i];
 
-    if (!grafo->listaAdj[i]) printf ("\n%d %s", i, atual);
-    else {
+    if (!listaAdjVazia(grafo, i)) {
+      // TODO: usar o METODO primeiraListaAdj & proxListaAdj
       while(atual != NULL) {
         printf ("\n%d %d %d", i, atual->vdest, atual->peso);
         atual = atual -> prox;
