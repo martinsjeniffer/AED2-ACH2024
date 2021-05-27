@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include "grafo_listaadj.h"
 
-void leGrafo(char* nomearq, Grafo* grafo) {
-    FILE * arquivoGrafo;
+void leGrafo(FILE * arquivoGrafo, Grafo* grafo) {
     int nVertices, nArestas;
     int v1, v2;
     Peso peso;
 
-    arquivoGrafo = fopen(nomearq, "r");
     if(arquivoGrafo == NULL) {
         fprintf(stderr, "O arquivo não existe!");
         return;
@@ -18,12 +16,9 @@ void leGrafo(char* nomearq, Grafo* grafo) {
         return;
     }
 
-    printf("\n nVertices nArestas: %d %d\n", nVertices, nArestas);
-
     inicializaGrafo(grafo, nVertices);
 
     while(fscanf(arquivoGrafo, "%d %d %d", &v1, &v2, &peso) != EOF) {
-        printf("\n v1: %d v2: %d peso: %d", v1, v2, peso);
         insereAresta(grafo, v1, v2, peso);
     }
 
@@ -34,11 +29,8 @@ void leGrafo(char* nomearq, Grafo* grafo) {
 int main() {
     Grafo grafo;
 
-    leGrafo("entrada.txt", &grafo);
-    // insereAresta(&grafo, 0, 2, 1);
-    // insereAresta(&grafo, 1, 2, 1);
-    // insereAresta(&grafo, 2, 4, 1);
-    // imprimeGrafo(&grafo);
+    if(stdin) leGrafo(stdin, &grafo);
+    imprimeGrafo(&grafo);
 
     return 0;
 }
