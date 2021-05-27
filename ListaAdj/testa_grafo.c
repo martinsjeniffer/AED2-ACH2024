@@ -2,13 +2,15 @@
 #include "grafo_listaadj.h"
 
 int main() {
-    Grafo g1;
-    int numVertices;
+    Grafo grafo;
+    printf("$$$$$");
+    inicializaGrafo(&grafo, 5);
 
-    do {
-        printf("Digite o número de vertices do grafo\n");
-        scanf("%d", &numVertices);
-    } while (!inicializaGrafo(&g1, numVertices));
+    leGrafo("entrada.txt", &grafo);
+    // insereAresta(&grafo, 0, 2, 1);
+    // insereAresta(&grafo, 1, 2, 1);
+    // insereAresta(&grafo, 2, 4, 1);
+    // imprimeGrafo(&grafo);
 
     return 0;
 }

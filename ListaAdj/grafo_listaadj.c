@@ -139,7 +139,6 @@ void liberaGrafo(Grafo * grafo) {
     int nVertices, nArestas;
     int v1, v2;
     Peso peso;
-    int idArquivo;
 
     arquivoGrafo = fopen(nomearq, "r");
     if(arquivoGrafo == NULL) {
@@ -147,18 +146,18 @@ void liberaGrafo(Grafo * grafo) {
         return;
     }
 
-    if (!fscanf(arquivoGrafo, "%d %d", nVertices, nArestas)) {
+    if (!fscanf(arquivoGrafo, "%d %d", &nVertices, &nArestas)) {
         fprintf(stderr, "Problemas ao ler nVertices e nArestas");
         return;
     }
 
     printf("\n nVertices nArestas: %d %d\n", nVertices, nArestas);
 
-    inicializaGrafo(grafo, nVertices);
+    // inicializaGrafo(grafo, nVertices);
 
     while(fscanf(arquivoGrafo, "%d %d %d", &v1, &v2, &peso) != EOF) {
         printf("\n v1: %d v2: %d peso: %d", v1, v2, peso);
-        insereAresta(grafo, v1, v2, peso);
+        // insereAresta(grafo, v1, v2, peso);
     }
 
     fclose(arquivoGrafo);
