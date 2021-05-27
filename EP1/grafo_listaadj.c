@@ -2,23 +2,24 @@
 #include <stdlib.h>
 #include "grafo_listaadj.h"
 
-bool inicializaGrafo(Grafo* grafo, int nv){
-  if (nv <= 0) {
+bool inicializaGrafo(Grafo * grafo, int numVertices){
+  if (numVertices <= 0) {
     fprintf(stderr, "ERRO na chamada de inicializaGrafo: \
       Numero de vertices deve ser positivo.\n");
     return false;
   }
 
-  grafo->numVertices = nv;
+  grafo->numVertices = numVertices;
 
-  if (!(grafo->listaAdj = (Apontador*) calloc(nv + 1, sizeof(Apontador)))) {
+  if (!(grafo->listaAdj = (Apontador*) calloc(numVertices + 1, sizeof(Apontador)))) {
     fprintf(stderr, "ERRO: Falha na alocacao de memoria na \
       funcao inicializaGrafo\n");
     return false;
   }
 
-  grafo->numArestas = 0;
+  for (int i = 0; i < grafo->numVertices; i++) grafo->listaAdj[i] = NULL;
 
+  grafo->numArestas = 0;
   return true;
 };
 
