@@ -147,7 +147,7 @@ void liberaGrafo(Grafo * grafo) {
 
 void imprimeGrafo(Grafo* grafo) {
   Apontador atual;
-  printf("\n%d %d", grafo->numVertices, grafo->numArestas);
+  printf("%d %d", grafo->numVertices, grafo->numArestas);
   
   for (int i = 0; i < grafo->numVertices; i++) {
     atual = grafo->listaAdj[i];

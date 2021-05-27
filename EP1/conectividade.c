@@ -31,6 +31,7 @@ int main() {
 
     if(stdin) leGrafo(stdin, &grafo);
     imprimeGrafo(&grafo);
+    liberaGrafo(&grafo);
 
     return 0;
 }
