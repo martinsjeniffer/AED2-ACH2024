@@ -3,6 +3,10 @@
 #define AN -1 /* Aresta nula */
 #define VERTICE_INVALIDO -1 /* numero de vertice invalido ou ausente */
 
+#define BRANCO 0
+#define CINZA 1
+#define PRETO 2
+
 typedef int Peso;
 
 /*
@@ -94,3 +98,7 @@ Apontador proxListaAdj(Grafo * grafo, int v, Aresta * atual);
 void liberaGrafo(Grafo * grafo);
 
 void imprimeGrafo(Grafo* grafo);
+
+void buscaProfundidade(Grafo* grafo);
+
+void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[]);

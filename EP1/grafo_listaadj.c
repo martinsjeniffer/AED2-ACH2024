@@ -163,3 +163,68 @@ void imprimeGrafo(Grafo* grafo) {
 
   return;
 }
+
+void buscaProfundidade(Grafo* grafo) {
+  /* 
+  * Aloca vetores 
+  *      cor,
+  *      tdesc,
+  *      tterm,
+  *      antecessor,
+  *          com tamanho grafo->nrVertices
+  *      tempo = 0;
+  */
+  int numVertices = grafo->numVertices;
+  int cor[numVertices], tdesc[numVertices], tterm[numVertices], antecessor[numVertices];
+  int tempo = 0;
+  /*
+  * Para cada vertice v 
+  *      cor[v] ← branco;
+  *      tdesc[v] = tterm[v] = 0;
+  *      antecessor[v] = - 1;
+  */
+  for (int v = 0; v <= numVertices; v++) {
+    cor[v] = BRANCO;
+    tdesc[v] = tterm[v] = 0;
+    antecessor[v] = -1;
+  }
+  printf("\nBP: \n");
+
+  /*
+  * Para cada vertice v 
+  *      Se cor[v] = branco 
+  *          visitaBP(v, grafo, &tempo, cor, tdesc, tterm, antecessor);
+  */
+  for (int v = 0; v < numVertices; v++)
+    if (cor[v] == BRANCO) visitaBP(v, grafo, &tempo, cor, tdesc, tterm, antecessor);
+
+  printf("\n");
+}
+
+void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[]) {
+  Apontador atual;
+  cor[v] = CINZA;
+  tdesc[v] = ++(*tempo);
+  // printf("%d ", v);
+  printf("\nv ficou CINZA: %d \ntdesc[%d]: %d", v, v, tdesc[v]); //Printamos o vértice que foi descoberto
+
+  if (!listaAdjVazia(grafo, v)) {
+    atual = grafo->listaAdj[v]; //Primeiro da lista de adjacencia é o 1
+
+    while(atual != NULL) { // Se 1 é diferente de null, ele passa por aqui
+
+      printf("\nADJ do %d: %d", v, atual->vdest);
+      if (cor[atual->vdest] == BRANCO) { // lembrando que o atencessor do 1 é o 0
+        antecessor[atual->vdest] = v;
+
+        //aqui temos uma recursão que ira voltar para a linha 44
+        visitaBP(atual->vdest, grafo, tempo, cor, tdesc, tterm, antecessor);
+      }
+      atual = atual->prox;
+    }
+  }
+
+  tterm[v] = ++(*tempo);
+  printf("\nFICOU PRETO: %d tterm[%d]: %d\n", v, v, tterm[v]);
+  cor[v] = PRETO;
+}
