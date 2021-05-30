@@ -6,6 +6,7 @@
 #define BRANCO 0
 #define CINZA 1
 #define PRETO 2
+#define INFINITO 1000
 
 typedef int Peso;
 
@@ -102,3 +103,9 @@ void imprimeGrafo(Grafo* grafo);
 void buscaProfundidade(Grafo* grafo);
 
 void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[]);
+
+void buscaEmLargura(Grafo *grafo);
+
+void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int distancia[]);
+
+void imprimeCaminhoLargura(int u, int v, int antecessor[], int distancia[]);

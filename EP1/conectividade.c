@@ -35,6 +35,7 @@ int main() {
 
   imprimeGrafo(&grafo);
   buscaProfundidade(&grafo);
+  buscaEmLargura(&grafo);
   liberaGrafo(&grafo);
 
   return 0;

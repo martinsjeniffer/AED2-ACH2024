@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "grafo_listaadj.h"
+#include "filaBL.h"
 
 bool inicializaGrafo(Grafo * grafo, int numVertices){
   if (numVertices <= 0) {
@@ -183,7 +184,7 @@ void buscaProfundidade(Grafo* grafo) {
   *      tdesc[v] = tterm[v] = 0;
   *      antecessor[v] = - 1;
   */
-  for (int v = 0; v <= numVertices; v++) {
+  for (int v = 0; v < numVertices; v++) {
     cor[v] = BRANCO;
     tdesc[v] = tterm[v] = 0;
     antecessor[v] = -1;
@@ -203,17 +204,17 @@ void buscaProfundidade(Grafo* grafo) {
 
 void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[]) {
   Apontador atual;
-  cor[v] = CINZA;
+  cor[v] = CINZA; 
   tdesc[v] = ++(*tempo);
-  // printf("%d ", v);
-  printf("\nv ficou CINZA: %d \ntdesc[%d]: %d", v, v, tdesc[v]); //Printamos o vértice que foi descoberto
+  printf("%d ", v);
+  // printf("\nv ficou CINZA: %d \ntdesc[%d]: %d", v, v, tdesc[v]); //Printamos o vértice que foi descoberto
 
   if (!listaAdjVazia(grafo, v)) {
     atual = grafo->listaAdj[v]; //Primeiro da lista de adjacencia é o 1
 
     while(atual != NULL) { // Se 1 é diferente de null, ele passa por aqui
 
-      printf("\nADJ do %d: %d", v, atual->vdest);
+      // printf("\nADJ do %d: %d", v, atual->vdest);
       if (cor[atual->vdest] == BRANCO) { // lembrando que o atencessor do 1 é o 0
         antecessor[atual->vdest] = v;
 
@@ -225,6 +226,99 @@ void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tte
   }
 
   tterm[v] = ++(*tempo);
-  printf("\nFICOU PRETO: %d tterm[%d]: %d\n", v, v, tterm[v]);
+  // printf("\nFICOU PRETO: %d tterm[%d]: %d\n", v, v, tterm[v]);
   cor[v] = PRETO;
+}
+
+void buscaEmLargura(Grafo *grafo) {
+    /* 
+     * Aloca vetores 
+     *      cor,
+     *      antecessor,
+     *      dist,
+     *          com tamanho grafo->nrVertices
+     */
+    int numVertices = grafo->numVertices;
+    int cor[numVertices], antecessor[numVertices], distancia[numVertices];
+
+    /*
+     * Para cada vertice v 
+     *      cor[v] ← branco;
+     *      antecessor[v] ← - 1;
+     *      distancia[v] ← ∞;
+     */
+    for (int v = 0; v <= numVertices; v++) {
+        cor[v] = BRANCO;
+        antecessor[v] = -1;
+        distancia[v] = INFINITO;
+    }
+    /*
+     * Para cada vertice v 
+     *      se cor[v] = branco
+     *          visitaLargura(v, grafo, cor, antecessor, distancia);
+     */
+    for (int v = 0; v < numVertices; v++) {
+        if (cor[v] == BRANCO)
+            visitaLargura(v, grafo, cor, antecessor, distancia);
+    }
+    for (int v = 0; v < numVertices; v++) {
+      imprimeCaminhoLargura(0, v, antecessor, distancia);
+      printf("\n");
+    }
+}
+
+void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int distancia[]) {
+  cor[origem] = CINZA;
+  distancia[origem] = 0;
+
+  printf("\norigem: %d", origem);
+  PFILA Fila = inicializarFila();
+  PONT w;
+  Apontador atual;
+  inserirFila(Fila, origem);
+
+  while (tamanhoFila(Fila) != 0) {
+    exibirLog(Fila);
+    w = removePrimeiroFila(Fila);
+
+    printf("\nremovePrimeiroFila = w = %d", w->id);
+
+    if (!listaAdjVazia(grafo, w->id)) {
+      atual = grafo->listaAdj[w->id];
+      while(atual != NULL) {
+        printf("\n ADJ DO %d: %d",  w->id, atual->vdest);
+
+        if(cor[atual->vdest] == BRANCO) {
+          printf("\n %d FICOU CINZA", atual->vdest);
+          cor[atual->vdest] = CINZA;
+          antecessor[atual->vdest] = w->id;
+          distancia[atual->vdest] = distancia[w->id] + 1;
+          inserirFila(Fila, atual->vdest);
+
+          printf("\nACABOU DE INSERIR: ");
+          exibirLog(Fila);
+        }
+        atual = atual->prox;
+      }
+    }
+
+    cor[w->id] = PRETO;
+    printf("\n w->id: %d FICOU Preto ", w->id);
+  }
+
+  printf("\nFILA VAZIA!");
+}
+
+void imprimeCaminhoLargura(int origem, int v, int antecessor[], int distancia[]) {
+    if (distancia[v] == INFINITO) {
+        printf ("Nao existe caminho de %d ate %d" , origem, v);
+        return;
+    }
+    if (origem == v) {
+        printf ("%d ", origem);
+        return;
+    } else {
+        imprimeCaminhoLargura(origem, antecessor[v], antecessor, distancia);
+        printf ( "%d " , v);
+    }
 }

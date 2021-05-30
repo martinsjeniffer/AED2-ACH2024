@@ -1,0 +1,104 @@
+7 8
+0 1 4
+0 2 1
+1 3 1
+1 0 4
+2 3 1
+2 0 1
+3 2 1
+3 1 1
+3 4 1
+3 5 7
+4 6 1
+4 3 1
+5 3 7
+5 6 1
+6 4 1
+6 5 1
+BP: 
+0 1 3 2 4 6 5 
+
+origem: 0
+ *****inserindo o 0 na fila
+Log fila [elementos: 1] - Inicio: [  0 ]
+
+
+removePrimeiroFila = w = 0
+ ADJ DO 0: 1
+ 1 FICOU CINZA
+ *****inserindo o 1 na fila
+ACABOU DE INSERIR: 
+Log fila [elementos: 1] - Inicio: [  1 ]
+
+
+ ADJ DO 0: 2
+ 2 FICOU CINZA
+ *****inserindo o 2 na fila
+ >>>>>FIM->PROX: 2
+ACABOU DE INSERIR: 
+Log fila [elementos: 1] - Inicio: [  1 ]
+
+
+ w->id: 0 FICOU Preto 
+Log fila [elementos: 1] - Inicio: [  1 ]
+
+
+removePrimeiroFila = w = 1
+ ADJ DO 1: 3
+ 3 FICOU CINZA
+ *****inserindo o 3 na fila
+ACABOU DE INSERIR: 
+Log fila [elementos: 1] - Inicio: [  3 ]
+
+
+ ADJ DO 1: 0
+ w->id: 1 FICOU Preto 
+Log fila [elementos: 1] - Inicio: [  3 ]
+
+
+removePrimeiroFila = w = 3
+ ADJ DO 3: 2
+ ADJ DO 3: 1
+ ADJ DO 3: 4
+ 4 FICOU CINZA
+ *****inserindo o 4 na fila
+ACABOU DE INSERIR: 
+Log fila [elementos: 1] - Inicio: [  4 ]
+
+
+ ADJ DO 3: 5
+ 5 FICOU CINZA
+ *****inserindo o 5 na fila
+ >>>>>FIM->PROX: 5
+ACABOU DE INSERIR: 
+Log fila [elementos: 1] - Inicio: [  4 ]
+
+
+ w->id: 3 FICOU Preto 
+Log fila [elementos: 1] - Inicio: [  4 ]
+
+
+removePrimeiroFila = w = 4
+ ADJ DO 4: 6
+ 6 FICOU CINZA
+ *****inserindo o 6 na fila
+ACABOU DE INSERIR: 
+Log fila [elementos: 1] - Inicio: [  6 ]
+
+
+ ADJ DO 4: 3
+ w->id: 4 FICOU Preto 
+Log fila [elementos: 1] - Inicio: [  6 ]
+
+
+removePrimeiroFila = w = 6
+ ADJ DO 6: 4
+ ADJ DO 6: 5
+ w->id: 6 FICOU Preto 
+FILA VAZIA!0 
+0 1 
+0 2 
+0 1 3 
+0 1 3 4 
+0 1 3 5 
+0 1 3 4 6 
