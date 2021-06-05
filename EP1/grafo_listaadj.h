@@ -109,3 +109,7 @@ void buscaEmLargura(Grafo *grafo);
 void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int distancia[]);
 
 void imprimeCaminhoLargura(int u, int v, int antecessor[], int distancia[]);
+
+void componentesConexos(Grafo * grafo);
+
+void verificaVerticeComponenteConexo(Grafo * grafo, int componenteConexo[], int vertice, int idComponente);

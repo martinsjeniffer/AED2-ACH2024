@@ -29,8 +29,6 @@ PONT buscarID(PFILA f, int id){
 bool inserirFila(PFILA f, int id) {
 	if(id < 0 || buscarID(f,id) != NULL) return false;
 
-	printf("\n *****inserindo o %d na fila", id);
-
     PONT newPerson = (PONT)malloc(sizeof(ELEMENTO));
     newPerson->id = id;
     newPerson->prox = NULL;
@@ -45,7 +43,6 @@ bool inserirFila(PFILA f, int id) {
 	}
     f->fim = newPerson;
     
-	printf("\n >>>>>FIM->PROX: %d", f->fim->id);
 	return true;
 }
 
