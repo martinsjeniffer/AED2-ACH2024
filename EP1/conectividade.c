@@ -34,7 +34,7 @@ int main() {
   if(stdin) leGrafo(stdin, &grafo);
 
   imprimeGrafo(&grafo);
-  // buscaEmLargura(&grafo);
+  buscaEmLargura(&grafo);
   // buscaProfundidade(&grafo);
   componentesConexos(&grafo);
   liberaGrafo(&grafo);

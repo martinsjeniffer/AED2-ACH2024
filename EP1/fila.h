@@ -4,22 +4,23 @@
 
 typedef struct aux {
   int id;
+  struct aux* ant;
   struct aux* prox;
 } ELEMENTO, * PONT;
 
 typedef struct {
-  PONT inicio;
-  PONT fim;
+  PONT ini;
+  int numElementos;
 } FILA, * PFILA;
 
 PFILA inicializarFila();
 
-int tamanhoFila(PFILA f);
+int tamanho(PFILA fila);
 
-PONT buscarID(PFILA f, int id);
+PONT buscarElemento(PFILA f, int id);
 
-bool inserirFila(PFILA f, int id);
+bool inserirElemento(PFILA f, int id);
 
-PONT removePrimeiroFila(PFILA f);
+PONT removePrimeiro(PFILA f);
 
 void exibirLog(PFILA f);
