@@ -20,6 +20,7 @@ typedef struct str_aresta {
     int vdest;
     Peso peso;
     struct str_aresta * prox;
+    bool arestaPrincipal;
 } Aresta;
 
 typedef Aresta * Apontador;

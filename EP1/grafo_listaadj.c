@@ -62,11 +62,9 @@ void insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
 
   novaAresta->vdest = v2;
   novaAresta->peso = peso;
+  novaAresta->arestaPrincipal = !existeAresta(grafo, v2, v1);
   novaAresta->prox = grafo->listaAdj[v1];
   grafo->listaAdj[v1] = novaAresta;
-
-  // novaAresta->prox = grafo->listaAdj[v2];
-  // grafo->listaAdj[v2] = novaAresta;
 
   if (!existeAresta(grafo, v2, v1)) grafo->numArestas++;
 }
@@ -81,32 +79,6 @@ bool existeAresta(Grafo * grafo, int v1, int v2) {
     aresta = aresta -> prox;
 
   if (aresta != NULL) return true;
-  return false;
-}
-
-bool removeAresta(Grafo * grafo, int v1, int v2, Peso * peso) {
-  if (!existeAresta(grafo, v1, v2)) return false;
-
-  Apontador atual, ant;
-  atual = grafo->listaAdj[v1];
-
-  while (atual != NULL && atual->vdest != v2) {
-    ant = atual;
-    atual = atual->prox;
-  }
-
-  if (atual != NULL) {
-    if (grafo->listaAdj[v1] == atual) grafo->listaAdj[v1] = atual->prox;
-    else ant->prox = atual->prox;
-
-    *peso = atual->peso;
-    atual->prox = NULL;
-    free(atual);
-    atual = NULL; // boa pratica
-    grafo->numArestas--;
-    return true;
-  }
-
   return false;
 }
 
@@ -154,9 +126,9 @@ void imprimeGrafo(Grafo* grafo) {
     atual = grafo->listaAdj[i];
 
     if (!listaAdjVazia(grafo, i)) {
-      // TODO: usar o METODO primeiraListaAdj & proxListaAdj
       while(atual != NULL) {
-        printf ("\n%d %d %d", i, atual->vdest, atual->peso);
+        if (atual->arestaPrincipal) 
+          printf ("\n%d %d %d", i, atual->vdest, atual->peso);
         atual = atual -> prox;
       }
     }
@@ -166,36 +138,17 @@ void imprimeGrafo(Grafo* grafo) {
 }
 
 void buscaProfundidade(Grafo* grafo) {
-  /* 
-  * Aloca vetores 
-  *      cor,
-  *      tdesc,
-  *      tterm,
-  *      antecessor,
-  *          com tamanho grafo->nrVertices
-  *      tempo = 0;
-  */
   int numVertices = grafo->numVertices;
   int cor[numVertices], tdesc[numVertices], tterm[numVertices], antecessor[numVertices];
   int tempo = 0;
-  /*
-  * Para cada vertice v 
-  *      cor[v] ← branco;
-  *      tdesc[v] = tterm[v] = 0;
-  *      antecessor[v] = - 1;
-  */
+
   for (int v = 0; v < numVertices; v++) {
     cor[v] = BRANCO;
     tdesc[v] = tterm[v] = 0;
     antecessor[v] = -1;
   }
-  printf("\n\nBP: \n");
 
-  /*
-  * Para cada vertice v 
-  *      Se cor[v] = branco 
-  *          visitaBP(v, grafo, &tempo, cor, tdesc, tterm, antecessor);
-  */
+  printf("\n\nBP: \n");
   for (int v = 0; v < numVertices; v++)
     if (cor[v] == BRANCO) visitaBP(v, grafo, &tempo, cor, tdesc, tterm, antecessor);
 
