@@ -120,7 +120,7 @@ void liberaGrafo(Grafo * grafo) {
 
 void imprimeGrafo(Grafo* grafo) {
   Apontador atual;
-  printf("%d %d", grafo->numVertices, grafo->numArestas);
+  fprintf(stdout, "%d %d", grafo->numVertices, grafo->numArestas);
   
   for (int i = 0; i < grafo->numVertices; i++) {
     atual = grafo->listaAdj[i];
@@ -128,7 +128,7 @@ void imprimeGrafo(Grafo* grafo) {
     if (!listaAdjVazia(grafo, i)) {
       while(atual != NULL) {
         if (atual->arestaPrincipal) 
-          printf ("\n%d %d %d", i, atual->vdest, atual->peso);
+          fprintf (stdout, "\n%d %d %d", i, atual->vdest, atual->peso);
         atual = atual -> prox;
       }
     }
@@ -148,18 +148,18 @@ void buscaProfundidade(Grafo* grafo) {
     antecessor[v] = -1;
   }
 
-  printf("\n\nBP: \n");
+  fprintf(stdout, "\n\nBP: \n");
   for (int v = 0; v < numVertices; v++)
     if (cor[v] == BRANCO) visitaBP(v, grafo, &tempo, cor, tdesc, tterm, antecessor);
 
-  printf("\n");
+  fprintf(stdout, "\n");
 }
 
 void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[]) {
   Apontador atual;
   cor[v] = CINZA; 
   tdesc[v] = ++(*tempo);
-  printf("%d ", v);
+  fprintf(stdout, "%d ", v);
 
   if (!listaAdjVazia(grafo, v)) {
     atual = grafo->listaAdj[v];
@@ -210,11 +210,11 @@ void buscaEmLargura(Grafo *grafo) {
             visitaLargura(v, grafo, cor, antecessor, distancia);
     }
 
-    printf("\n\nCaminhos BL: \n");
+    fprintf(stdout, "\n\nCaminhos BL: \n");
     for (int v = 0; v < numVertices; v++) {
         if(distancia[v] == 0) origem = v;
         imprimeCaminhoLargura(origem, v, antecessor, distancia);
-      printf("\n");
+      fprintf(stdout, "\n");
     }
 }
 
@@ -222,7 +222,7 @@ void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int di
   cor[origem] = CINZA;
   distancia[origem] = 0;
   antecessor[origem] = origem;
-  printf("%d ", origem);
+  fprintf(stdout, "%d ", origem);
 
   PFILA Fila = inicializarFila();
   PONT w;
@@ -250,14 +250,14 @@ void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int di
 
 void imprimeCaminhoLargura(int origem, int v, int antecessor[], int distancia[]) {
   if (origem == v) {
-    printf ("%d ", origem);
+    fprintf (stdout, "%d ", origem);
     return;
-  }
+  } 
   if (distancia[v] == 0) {
     return;
   } else {
     imprimeCaminhoLargura(origem, antecessor[v], antecessor, distancia);
-    printf ( "%d " , v);
+    fprintf (stdout, "%d " , v);
   }
 }
 
@@ -272,7 +272,7 @@ void componentesConexos(Grafo * grafo){
   for (int vertice = 0; vertice < grafo->numVertices; ++vertice) {
     if (componenteConexo[vertice] == -1) {
       id++;
-      printf("\nC%d: ", id);
+      fprintf(stdout, "\nC%d: ", id);
       verificaVerticeComponenteConexo(grafo, componenteConexo, vertice, id);
     }
   }
@@ -280,7 +280,7 @@ void componentesConexos(Grafo * grafo){
 
 void verificaVerticeComponenteConexo(Grafo * grafo, int componenteConexo[], int vertice, int idComponente) {
   componenteConexo[vertice] = idComponente;
-  printf("%d ", vertice);
+  fprintf(stdout, "%d ", vertice);
   Apontador atual = grafo->listaAdj[vertice];
 
   while (atual != NULL) {
