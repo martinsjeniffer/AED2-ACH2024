@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "grafo_listaadj.h"
-/* ex de chamada: ./grafo.exe < entrada.txt > saida.txt 2> erro.txt */
+/* ex de chamada: valgrind ./grafo.exe < entrada.txt > saida.txt 2> erro.txt */
 
 void leGrafo(FILE * arquivoGrafo, Grafo* grafo) {
   int nVertices, nArestas;
