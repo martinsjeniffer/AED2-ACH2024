@@ -220,6 +220,7 @@ void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tte
 
         //aqui temos uma recursão que ira voltar para a linha 44
         visitaBP(atual->vdest, grafo, tempo, cor, tdesc, tterm, antecessor);
+        >>>>>>>>>> verticeArticulacao????
       }
       atual = atual->prox;
     }
