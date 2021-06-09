@@ -111,6 +111,8 @@ void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int di
 
 void imprimeCaminhoLargura(int u, int v, int antecessor[], int distancia[]);
 
+void imprimeCaminhoBuscaProf(int origem, int v, int antecessor[]);
+
 void componentesConexos(Grafo * grafo);
 
 void verificaVerticeComponenteConexo(Grafo * grafo, int componenteConexo[], int vertice, int idComponente);

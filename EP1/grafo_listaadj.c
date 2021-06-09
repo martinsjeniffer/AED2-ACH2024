@@ -141,6 +141,7 @@ void buscaProfundidade(Grafo* grafo) {
   int numVertices = grafo->numVertices;
   int cor[numVertices], tdesc[numVertices], tterm[numVertices], antecessor[numVertices];
   int tempo = 0;
+  int origem;
 
   for (int v = 0; v < numVertices; v++) {
     cor[v] = BRANCO;
@@ -151,8 +152,14 @@ void buscaProfundidade(Grafo* grafo) {
   fprintf(stdout, "\n\nBP: \n");
   for (int v = 0; v < numVertices; v++)
     if (cor[v] == BRANCO) visitaBP(v, grafo, &tempo, cor, tdesc, tterm, antecessor);
-
   fprintf(stdout, "\n");
+
+  fprintf(stdout, "\n\nCaminhos BP: \n");
+  for (int v = 0; v < numVertices; v++) {
+      if(antecessor[v] == -1) origem = v;
+      imprimeCaminhoBuscaProf(origem, v, antecessor);
+    fprintf(stdout, "\n");
+  }
 }
 
 void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[]) {
@@ -205,6 +212,7 @@ void buscaEmLargura(Grafo *grafo) {
      *      se cor[v] = branco
      *          visitaLargura(v, grafo, cor, antecessor, distancia);
      */
+    fprintf(stdout, "\n\nBL: \n");
     for (int v = 0; v < numVertices; v++) {
         if (cor[v] == BRANCO)
             visitaLargura(v, grafo, cor, antecessor, distancia);
@@ -222,7 +230,6 @@ void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int di
   cor[origem] = CINZA;
   distancia[origem] = 0;
   antecessor[origem] = origem;
-  fprintf(stdout, "%d ", origem);
 
   PFILA Fila = inicializarFila();
   PONT w;
@@ -231,6 +238,8 @@ void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int di
 
   while (Fila->numElementos != 0) {
     w = removePrimeiro(Fila);
+    fprintf(stdout, "%d ", w->id);
+
     if (!listaAdjVazia(grafo, w->id)) {
       atual = grafo->listaAdj[w->id];
       while(atual != NULL) {
@@ -257,6 +266,19 @@ void imprimeCaminhoLargura(int origem, int v, int antecessor[], int distancia[])
     return;
   } else {
     imprimeCaminhoLargura(origem, antecessor[v], antecessor, distancia);
+    fprintf (stdout, "%d " , v);
+  }
+}
+
+void imprimeCaminhoBuscaProf(int origem, int v, int antecessor[]) {
+  if (origem == v) {
+    fprintf (stdout, "%d ", origem);
+    return;
+  } 
+  if (antecessor[v] == -1) {
+    return;
+  } else {
+    imprimeCaminhoBuscaProf(origem, antecessor[v], antecessor);
     fprintf (stdout, "%d " , v);
   }
 }
