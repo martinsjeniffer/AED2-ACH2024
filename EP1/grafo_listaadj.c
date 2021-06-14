@@ -139,7 +139,7 @@ void imprimeGrafo(Grafo* grafo) {
 
 void buscaProfundidade(Grafo* grafo) {
   int numVertices = grafo->numVertices;
-  int cor[numVertices], tdesc[numVertices], tterm[numVertices], antecessor[numVertices];
+  int cor[numVertices], tdesc[numVertices], tterm[numVertices], antecessor[numVertices], vertArticulacao[numVertices], menorTempoVertRetorno[numVertices];
   int tempo = 0;
   int origem;
 
@@ -147,11 +147,18 @@ void buscaProfundidade(Grafo* grafo) {
     cor[v] = BRANCO;
     tdesc[v] = tterm[v] = 0;
     antecessor[v] = -1;
+    menorTempoVertRetorno[v] = 0;
+    vertArticulacao[v] = false;
   }
 
   fprintf(stdout, "\n\nBP: \n");
   for (int v = 0; v < numVertices; v++)
-    if (cor[v] == BRANCO) visitaBP(v, grafo, &tempo, cor, tdesc, tterm, antecessor);
+    if (cor[v] == BRANCO) visitaBP(v, grafo, &tempo, cor, tdesc, tterm, antecessor, menorTempoVertRetorno, vertArticulacao);
+  fprintf(stdout, "\n");
+
+  fprintf(stdout, "\n\nVERTICES DE ARTICULACAO: \n");
+  for (int v = 0; v < numVertices; v++) 
+    if (vertArticulacao[v]) fprintf(stdout, " %d ", v);
   fprintf(stdout, "\n");
 
   fprintf(stdout, "\n\nCaminhos BP: \n");
@@ -162,10 +169,11 @@ void buscaProfundidade(Grafo* grafo) {
   }
 }
 
-void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[]) {
+void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]) {
   Apontador atual;
   cor[v] = CINZA; 
-  tdesc[v] = ++(*tempo);
+  tdesc[v] = menorTempoVertRetorno[v] = ++(*tempo);
+
   fprintf(stdout, "%d ", v);
 
   if (!listaAdjVazia(grafo, v)) {
@@ -174,8 +182,21 @@ void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tte
     while(atual != NULL) {
       if (cor[atual->vdest] == BRANCO) {
         antecessor[atual->vdest] = v;
-        visitaBP(atual->vdest, grafo, tempo, cor, tdesc, tterm, antecessor);
+        visitaBP(atual->vdest, grafo, tempo, cor, tdesc, tterm, antecessor, menorTempoVertRetorno, vertArticulacao);
+
+        menorTempoVertRetorno[v] = menorTempoVertRetorno[v] < menorTempoVertRetorno[atual->vdest] ? menorTempoVertRetorno[v] : menorTempoVertRetorno[atual->vdest];
+
+        // iremos considerar a raiz da arvore de descoberta como vert de articulacao?
+
+        // if (parent[u] == NIL && children > 1)
+        //   ap[u] = true;
+        
+        if (antecessor[v] != -1 && menorTempoVertRetorno[atual->vdest] >= tdesc[v])
+          vertArticulacao[v] = true;
+      } else if (atual->vdest != antecessor[v]) {
+        menorTempoVertRetorno[v] = menorTempoVertRetorno[v] < tdesc[atual->vdest] ? menorTempoVertRetorno[v] : tdesc[atual->vdest];
       }
+
       atual = atual->prox;
     }
   }

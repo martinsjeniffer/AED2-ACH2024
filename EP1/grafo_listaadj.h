@@ -103,7 +103,7 @@ void imprimeGrafo(Grafo* grafo);
 
 void buscaProfundidade(Grafo* grafo);
 
-void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[]);
+void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]);
 
 void buscaEmLargura(Grafo *grafo);
 
