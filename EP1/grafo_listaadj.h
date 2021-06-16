@@ -2,6 +2,7 @@
 
 #define AN -1 /* Aresta nula */
 #define VERTICE_INVALIDO -1 /* numero de vertice invalido ou ausente */
+#define MAX_VERTICES 100
 
 #define BRANCO 0
 #define CINZA 1
