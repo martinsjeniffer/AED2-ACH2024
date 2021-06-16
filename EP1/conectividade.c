@@ -1,31 +1,98 @@
 #include <stdio.h>
 #include "grafo_listaadj.h"
-/* ex de chamada: valgrind ./grafo.exe < entrada.txt > saida.txt 2> erro.txt */
 
-void leGrafo(FILE * arquivoGrafo, Grafo* grafo) {
+bool leGrafo(FILE * arquivoGrafo, Grafo* grafo) {
   int nVertices, nArestas;
   int v1, v2;
   Peso peso;
 
   if(arquivoGrafo == NULL) {
-    fprintf(stderr, "O arquivo não existe!");
-    return;
+    fprintf(stderr, "O arquivo não existe!\n");
+    return false;
   }
 
   if (!fscanf(arquivoGrafo, "%d %d", &nVertices, &nArestas)) {
-    fprintf(stderr, "Problemas ao ler nVertices e nArestas");
-    return;
+    fprintf(stderr, "Problemas ao ler nVertices e nArestas\n");
+    return false;
   }
 
-  inicializaGrafo(grafo, nVertices);
+  if(!inicializaGrafo(grafo, nVertices)) {
+    fprintf(stderr, "Erro ao inicializar o grafo\n");
+    return false;
+  }
 
   while(fscanf(arquivoGrafo, "%d %d %d", &v1, &v2, &peso) != EOF) {
-    insereAresta(grafo, v1, v2, peso);
-    insereAresta(grafo, v2, v1, peso);
+    if (insereAresta(grafo, v1, v2, peso)) insereAresta(grafo, v2, v1, peso);
+    else {
+      fprintf(stderr, "Erro ao inserir aresta.\n");
+    }
   }
 
   fclose(arquivoGrafo);
-  return;
+  return true;
+}
+
+void buscaEmLargura(Grafo *grafo) {
+    int numVertices = grafo->numVertices;
+    int cor[numVertices], antecessor[numVertices], distancia[numVertices];
+    int origem;
+
+    for (int v = 0; v < numVertices; v++) {
+        cor[v] = BRANCO;
+        antecessor[v] = -1;
+        distancia[v] = INFINITO;
+    }
+
+    fprintf(stdout, "\n\nBL: \n");
+    for (int v = 0; v < numVertices; v++) {
+        if (cor[v] == BRANCO) visitaLargura(v, grafo, cor, antecessor, distancia);
+    }
+
+    fprintf(stdout, "\n\nCaminhos BL: \n");
+    for (int v = 0; v < numVertices; v++) {
+        if (distancia[v] == 0) origem = v;
+        imprimeCaminhoLargura(origem, v, antecessor, distancia);
+      fprintf(stdout, "\n");
+    }
+}
+
+void buscaEmProfundidade(Grafo* grafo, int vertArticulacao[]) {
+  int numVertices = grafo->numVertices;
+  int cor[numVertices],
+    tempoDescobrimento[numVertices],
+    tempoTermino[numVertices],
+    antecessor[numVertices],
+    menorTempoVertRetorno[numVertices];
+
+  int tempo = 0;
+  int origem;
+
+  for (int v = 0; v < numVertices; v++) {
+    cor[v] = BRANCO;
+    tempoDescobrimento[v] = tempoTermino[v] = 0;
+    antecessor[v] = -1;
+    menorTempoVertRetorno[v] = 0;
+    vertArticulacao[v] = false;
+  }
+
+  fprintf(stdout, "\n\nBP: \n");
+  for (int v = 0; v < numVertices; v++)
+    if (cor[v] == BRANCO) visitaBP(v, grafo, &tempo, cor, tempoDescobrimento, tempoTermino, antecessor, menorTempoVertRetorno, vertArticulacao);
+  fprintf(stdout, "\n");
+
+  fprintf(stdout, "\n\nCaminhos BP: \n");
+  for (int v = 0; v < numVertices; v++) {
+      if(antecessor[v] == -1) origem = v;
+      imprimeCaminhoBuscaProf(origem, v, antecessor);
+    fprintf(stdout, "\n");
+  }
+}
+
+void verticesDeArticulacao(Grafo* grafo, int vertArticulacao[]) {
+  fprintf(stdout, "\n\nVertices de Articulacao: \n");
+  for (int v = 0; v < grafo->numVertices; v++) 
+    if (vertArticulacao[v]) fprintf(stdout, "%d ", v);
+  fprintf(stdout, "\n");
 }
 
 int main() {
@@ -34,13 +101,18 @@ int main() {
   stdout = fopen("./saida.txt", "w+");
   stderr = fopen("./erro.txt", "w+");
 
-  leGrafo(stdin, &grafo);
+  if (leGrafo(stdin, &grafo)) {
+    imprimeGrafo(&grafo);
+    buscaEmLargura(&grafo);
 
-  imprimeGrafo(&grafo);
-  buscaEmLargura(&grafo);
-  buscaProfundidade(&grafo);
-  componentesConexos(&grafo);
-  liberaGrafo(&grafo);
+    int numVertices = grafo.numVertices;
+    int vertArticulacao[numVertices];
+    buscaEmProfundidade(&grafo, vertArticulacao);
+    componentesConexos(&grafo);
+    verticesDeArticulacao(&grafo, vertArticulacao);
+    liberaGrafo(&grafo);
+  }
+
 
   return 0;
 }

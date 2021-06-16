@@ -3,18 +3,16 @@
 #include "grafo_listaadj.h"
 #include "fila.h"
 
-bool inicializaGrafo(Grafo * grafo, int numVertices){
+bool inicializaGrafo(Grafo * grafo, int numVertices) {
   if (numVertices <= 0) {
-    fprintf(stderr, "ERRO na chamada de inicializaGrafo: \
-      Numero de vertices deve ser positivo.\n");
+    fprintf(stderr, "ERRO [inicializaGrafo linha 08]: Numero de vertices deve ser positivo.\n");
     return false;
   }
 
   grafo->numVertices = numVertices;
 
   if (!(grafo->listaAdj = (Apontador*) calloc(numVertices + 1, sizeof(Apontador)))) {
-    fprintf(stderr, "ERRO: Falha na alocacao de memoria na \
-      funcao inicializaGrafo\n");
+    fprintf(stderr, "ERRO [inicializaGrafo linha 15]: Falha na alocacao de memoria na funcao inicializaGrafo\n");
     return false;
   }
 
@@ -26,38 +24,39 @@ bool inicializaGrafo(Grafo * grafo, int numVertices){
 
 bool verticeValido(Grafo * grafo, int vertice) {
   if (vertice > grafo->numVertices) {
-    fprintf(stderr, "ERRO: \
-      Numero do vertice (%d) maior que o numero total de vertices (%d)", vertice, grafo->numVertices);
+    fprintf(stderr, "ERRO [verticeValido linha 27]: Numero do vertice (%d) maior que o numero total de vertices (%d)\n", vertice, grafo->numVertices);
     return false;
   }
+
   if (vertice < 0) {
-    fprintf(stderr, "ERRO: \
-      Numero do vertice (%d) deve ser positivo", vertice);
+    fprintf(stderr, "ERRO [verticeValido linha 32]: Numero do vertice (%d) deve ser positivo\n", vertice);
     return false;
   }
 
   return true;
 }
 
-void insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
+bool insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
   Apontador novaAresta;
 
   if(v1 == v2){
-    fprintf(stderr, "ERRO em insereAresta: Grafo nao direcionado nao tem self-loop.\n");
-    return;
+    fprintf(stderr, "ERRO [insereAresta linha 43]: Grafo nao direcionado nao tem self-loop.\n");
+    return false;
   } 
 
-  if (!verticeValido(grafo, v1) && !verticeValido(grafo, v2)) return;
+  if (!verticeValido(grafo, v1) || !verticeValido(grafo, v2)) {
+    fprintf(stderr, "ERRO [insereAresta linha 48]: Vertice invalido.\n");
+    return false;
+  }
 
   if (existeAresta(grafo, v1, v2)) {
-    fprintf(stderr, "ERRO em insereAresta: A aresta (%d,%d) ja existe.\n", v1, v2);
-    return;
+    fprintf(stderr, "ERRO [insereAresta linha 52]: A aresta (%d,%d) ja existe.\n", v1, v2);
+    return false;
   }
 
   if (!(novaAresta = (Apontador) calloc(1, sizeof(Apontador)))) {
-    fprintf(stderr, "ERRO em insereAresta: Falha na alocacao de memoria na \
-      funcao insereAresta\n");
-    return;
+    fprintf(stderr, "ERRO [insereAresta linha 57]: Falha na alocacao de memoria.\n");
+    return false;
   }
 
   novaAresta->vdest = v2;
@@ -67,6 +66,8 @@ void insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
   grafo->listaAdj[v1] = novaAresta;
 
   if (!existeAresta(grafo, v2, v1)) grafo->numArestas++;
+
+  return true;
 }
 
 bool existeAresta(Grafo * grafo, int v1, int v2) {
@@ -105,68 +106,35 @@ void liberaGrafo(Grafo * grafo) {
   int vertice;
   Apontador aresta;
 
-  for (vertice = 0; vertice <= grafo->numVertices; vertice++)
+  for (vertice = 0; vertice <= grafo->numVertices; vertice++) {
     while ((aresta = grafo->listaAdj[vertice]) != NULL) {
       grafo->listaAdj[vertice] = aresta->prox;
       aresta->prox = NULL;
       free(aresta);
     }
+  }
 
   grafo->numVertices = 0;
   free(grafo->listaAdj); // pois o vetor tb tem alocacao dinamica
   grafo->listaAdj = NULL;
-
 }
 
 void imprimeGrafo(Grafo* grafo) {
   Apontador atual;
   fprintf(stdout, "%d %d", grafo->numVertices, grafo->numArestas);
-  
+
   for (int i = 0; i < grafo->numVertices; i++) {
-    atual = grafo->listaAdj[i];
+    atual = primeiroListaAdj(grafo, i);
 
     if (!listaAdjVazia(grafo, i)) {
       while(atual != NULL) {
-        if (atual->arestaPrincipal) 
-          fprintf (stdout, "\n%d %d %d", i, atual->vdest, atual->peso);
-        atual = atual -> prox;
+        if (atual->arestaPrincipal) fprintf (stdout, "\n%d %d %d", i, atual->vdest, atual->peso);
+        atual = proxListaAdj(grafo, i, atual);
       }
     }
   }
 
   return;
-}
-
-void buscaProfundidade(Grafo* grafo) {
-  int numVertices = grafo->numVertices;
-  int cor[numVertices], tdesc[numVertices], tterm[numVertices], antecessor[numVertices], vertArticulacao[numVertices], menorTempoVertRetorno[numVertices];
-  int tempo = 0;
-  int origem;
-
-  for (int v = 0; v < numVertices; v++) {
-    cor[v] = BRANCO;
-    tdesc[v] = tterm[v] = 0;
-    antecessor[v] = -1;
-    menorTempoVertRetorno[v] = 0;
-    vertArticulacao[v] = false;
-  }
-
-  fprintf(stdout, "\n\nBP: \n");
-  for (int v = 0; v < numVertices; v++)
-    if (cor[v] == BRANCO) visitaBP(v, grafo, &tempo, cor, tdesc, tterm, antecessor, menorTempoVertRetorno, vertArticulacao);
-  fprintf(stdout, "\n");
-
-  fprintf(stdout, "\n\nVERTICES DE ARTICULACAO: \n");
-  for (int v = 0; v < numVertices; v++) 
-    if (vertArticulacao[v]) fprintf(stdout, " %d ", v);
-  fprintf(stdout, "\n");
-
-  fprintf(stdout, "\n\nCaminhos BP: \n");
-  for (int v = 0; v < numVertices; v++) {
-      if(antecessor[v] == -1) origem = v;
-      imprimeCaminhoBuscaProf(origem, v, antecessor);
-    fprintf(stdout, "\n");
-  }
 }
 
 void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]) {
@@ -205,47 +173,6 @@ void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tte
   cor[v] = PRETO;
 }
 
-void buscaEmLargura(Grafo *grafo) {
-    /* 
-     * Aloca vetores 
-     *      cor,
-     *      antecessor,
-     *      dist,
-     *          com tamanho grafo->nrVertices
-     */
-    int numVertices = grafo->numVertices;
-    int cor[numVertices], antecessor[numVertices], distancia[numVertices];
-    int origem;
-
-    /*
-     * Para cada vertice v 
-     *      cor[v] ← branco;
-     *      antecessor[v] ← - 1;
-     *      distancia[v] ← ∞;
-     */
-    for (int v = 0; v < numVertices; v++) {
-        cor[v] = BRANCO;
-        antecessor[v] = -1;
-        distancia[v] = INFINITO;
-    }
-    /*
-     * Para cada vertice v 
-     *      se cor[v] = branco
-     *          visitaLargura(v, grafo, cor, antecessor, distancia);
-     */
-    fprintf(stdout, "\n\nBL: \n");
-    for (int v = 0; v < numVertices; v++) {
-        if (cor[v] == BRANCO)
-            visitaLargura(v, grafo, cor, antecessor, distancia);
-    }
-
-    fprintf(stdout, "\n\nCaminhos BL: \n");
-    for (int v = 0; v < numVertices; v++) {
-        if(distancia[v] == 0) origem = v;
-        imprimeCaminhoLargura(origem, v, antecessor, distancia);
-      fprintf(stdout, "\n");
-    }
-}
 
 void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int distancia[]) {
   cor[origem] = CINZA;

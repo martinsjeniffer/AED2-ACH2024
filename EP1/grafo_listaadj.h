@@ -57,12 +57,12 @@ bool inicializaGrafo(Grafo * grafo, int nv);
 bool verticeValido(Grafo * grafo, int v);
 
 /*
- * void insereAresta(Grafo * grafo, int v1, int v2, Peso peso):
+ * bool insereAresta(Grafo * grafo, int v1, int v2, Peso peso):
  *    insere a aresta (v1, v2) com peso "peso" no grafo.
  *    nao verifica se a aresta ja existia (isso deve ser feito pelo
  *    usuario antes, se necessario)
  */
-void insereAresta(Grafo * grafo, int v1, int v2, Peso peso);
+bool insereAresta(Grafo * grafo, int v1, int v2, Peso peso);
 
 /*
  * bool existeAresta(Grafo * grafo, int v1, int v2):
@@ -101,11 +101,11 @@ void liberaGrafo(Grafo * grafo);
 
 void imprimeGrafo(Grafo* grafo);
 
-void buscaProfundidade(Grafo* grafo);
+// void buscaProfundidade(Grafo* grafo);
 
 void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]);
 
-void buscaEmLargura(Grafo *grafo);
+// void buscaEmLargura(Grafo *grafo);
 
 void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int distancia[]);
 
