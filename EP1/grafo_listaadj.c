@@ -44,7 +44,7 @@ bool verticeValido(Grafo * grafo, int vertice) {
 bool insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
   Apontador novaAresta;
 
-  if(v1 == v2){
+  if (v1 == v2){
     fprintf(stderr, "ERRO [insereAresta linha ***]: Grafo nao direcionado nao tem self-loop.\n");
     return false;
   } 
@@ -108,10 +108,9 @@ Apontador proxListaAdj(Grafo * grafo, int v, Apontador atual) {
 }
 
 void liberaGrafo(Grafo * grafo) {
-  int vertice;
   Apontador aresta;
 
-  for (vertice = 0; vertice <= grafo->numVertices; vertice++) {
+  for (int vertice = 0; vertice < grafo->numVertices; vertice++) {
     while ((aresta = grafo->listaAdj[vertice]) != NULL) {
       grafo->listaAdj[vertice] = aresta->prox;
       aresta->prox = NULL;
@@ -120,7 +119,7 @@ void liberaGrafo(Grafo * grafo) {
   }
 
   grafo->numVertices = 0;
-  free(grafo->listaAdj); // pois o vetor tb tem alocacao dinamica
+  free(grafo->listaAdj);
   grafo->listaAdj = NULL;
 }
 
@@ -128,13 +127,13 @@ void imprimeGrafo(Grafo* grafo) {
   Apontador atual;
   fprintf(stdout, "%d %d", grafo->numVertices, grafo->numArestas);
 
-  for (int i = 0; i < grafo->numVertices; i++) {
-    atual = primeiroListaAdj(grafo, i);
+  for (int vertice = 0; vertice < grafo->numVertices; vertice++) {
+    atual = primeiroListaAdj(grafo, vertice);
 
-    if (!listaAdjVazia(grafo, i)) {
-      while(atual != NULL) {
-        if (atual->arestaPrincipal) fprintf (stdout, "\n%d %d %d", i, atual->vertice, atual->peso);
-        atual = proxListaAdj(grafo, i, atual);
+    if (!listaAdjVazia(grafo, vertice)) {
+      while (atual != NULL) {
+        if (atual->arestaPrincipal) fprintf (stdout, "\n%d %d %d", vertice, atual->vertice, atual->peso);
+        atual = proxListaAdj(grafo, vertice, atual);
       }
     }
   }
@@ -142,40 +141,40 @@ void imprimeGrafo(Grafo* grafo) {
   return;
 }
 
-void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]) {
+void visitaProfundidade(int vertice, Grafo * grafo, int * tempo, int cor[], int tdesc[],
+                        int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]) {
   Apontador atual;
-  cor[v] = CINZA; 
-  tdesc[v] = menorTempoVertRetorno[v] = ++(*tempo);
 
-  fprintf(stdout, "%d ", v);
+  cor[vertice] = CINZA; 
+  tdesc[vertice] = menorTempoVertRetorno[vertice] = ++(*tempo);
 
-  if (!listaAdjVazia(grafo, v)) {
-    atual = primeiroListaAdj(grafo, v);
+  fprintf(stdout, "%d ", vertice);
+
+  if (!listaAdjVazia(grafo, vertice)) {
+    atual = primeiroListaAdj(grafo, vertice);
 
     while(atual != NULL) {
       if (cor[atual->vertice] == BRANCO) {
-        antecessor[atual->vertice] = v;
-        visitaBP(atual->vertice, grafo, tempo, cor, tdesc, tterm, antecessor, menorTempoVertRetorno, vertArticulacao);
+        antecessor[atual->vertice] = vertice;
+        visitaProfundidade(atual->vertice, grafo, tempo, cor, tdesc, 
+                          antecessor, menorTempoVertRetorno, vertArticulacao);
 
-        menorTempoVertRetorno[v] = menorTempoVertRetorno[v] < menorTempoVertRetorno[atual->vertice] ? menorTempoVertRetorno[v] : menorTempoVertRetorno[atual->vertice];
-
+        menorTempoVertRetorno[vertice] = MIN(menorTempoVertRetorno[vertice], menorTempoVertRetorno[atual->vertice]);
         // iremos considerar a raiz da arvore de descoberta como vert de articulacao?
-
         // if (parent[u] == NIL && children > 1)
         //   ap[u] = true;
         
-        if (antecessor[v] != -1 && menorTempoVertRetorno[atual->vertice] >= tdesc[v])
-          vertArticulacao[v] = true;
-      } else if (atual->vertice != antecessor[v]) {
-        menorTempoVertRetorno[v] = menorTempoVertRetorno[v] < tdesc[atual->vertice] ? menorTempoVertRetorno[v] : tdesc[atual->vertice];
+        if (antecessor[vertice] != -1 && menorTempoVertRetorno[atual->vertice] >= tdesc[vertice])
+          vertArticulacao[vertice] = true;
+      } else if (atual->vertice != antecessor[vertice]) {
+        menorTempoVertRetorno[vertice] = MIN(menorTempoVertRetorno[vertice], tdesc[atual->vertice]);
       }
 
-      atual = proxListaAdj(grafo, v, atual);
+      atual = proxListaAdj(grafo, vertice, atual);
     }
   }
 
-  tterm[v] = ++(*tempo);
-  cor[v] = PRETO;
+  cor[vertice] = PRETO;
 }
 
 void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int distancia[]) {
@@ -195,8 +194,9 @@ void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int di
 
     if (!listaAdjVazia(grafo, elemento->id)) {
       atual = primeiroListaAdj(grafo, elemento->id);
-      while(atual != NULL) {
-        if(cor[atual->vertice] == BRANCO) {
+
+      while (atual != NULL) {
+        if (cor[atual->vertice] == BRANCO) {
           cor[atual->vertice] = CINZA;
           antecessor[atual->vertice] = elemento->id;
           distancia[atual->vertice]++;
@@ -244,6 +244,7 @@ void componentesConexos(Grafo * grafo){
     componenteConexo[vertice] = -1;
   }
 
+  fprintf(stdout, "\nComponentes Conectados:");
   for (int vertice = 0; vertice < grafo->numVertices; ++vertice) {
     if (componenteConexo[vertice] == -1) {
       id++;
@@ -254,14 +255,15 @@ void componentesConexos(Grafo * grafo){
 }
 
 void verificaVerticeComponenteConexo(Grafo * grafo, int componenteConexo[], int vertice, int idComponente) {
+  Apontador atual = primeiroListaAdj(grafo, vertice);
+
   componenteConexo[vertice] = idComponente;
   fprintf(stdout, "%d ", vertice);
-  Apontador atual = grafo->listaAdj[vertice];
 
   while (atual != NULL) {
     if(componenteConexo[atual->vertice] == -1) {
       verificaVerticeComponenteConexo(grafo, componenteConexo, atual->vertice, idComponente);
     }
-    atual = atual->prox;
+    atual = proxListaAdj(grafo, vertice, atual);
   }
 }

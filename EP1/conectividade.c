@@ -41,14 +41,14 @@ void buscaEmLargura(Grafo *grafo) {
     distancia[v] = INFINITO;
   }
 
-  fprintf(stdout, "\n\nBL: \n");
+  fprintf(stdout, "\n\nBL:\n");
   for (int v = 0; v < numVertices; v++) {
     if (cor[v] == BRANCO) {
       visitaLargura(v, grafo, cor, antecessor, distancia);
     }
   }
 
-  fprintf(stdout, "\n\nCaminhos BL: \n");
+  fprintf(stdout, "\n\nCaminhos BL:\n");
   for (int v = 0; v < numVertices; v++) {
       if (distancia[v] == 0) origem = v;
       imprimeCaminhoLargura(origem, v, antecessor, distancia);
@@ -60,7 +60,6 @@ void buscaEmProfundidade(Grafo* grafo, int vertArticulacao[]) {
   int numVertices = grafo->numVertices;
   int cor[numVertices],
     tempoDescobrimento[numVertices],
-    tempoTermino[numVertices],
     antecessor[numVertices],
     menorTempoVertRetorno[numVertices];
 
@@ -69,20 +68,20 @@ void buscaEmProfundidade(Grafo* grafo, int vertArticulacao[]) {
 
   for (int v = 0; v < numVertices; v++) {
     cor[v] = BRANCO;
-    tempoDescobrimento[v] = tempoTermino[v] = 0;
+    tempoDescobrimento[v] = 0;
     antecessor[v] = -1;
     menorTempoVertRetorno[v] = 0;
     vertArticulacao[v] = false;
   }
 
-  fprintf(stdout, "\nBP: \n");
+  fprintf(stdout, "\nBP:\n");
   for (int v = 0; v < numVertices; v++) {
     if (cor[v] == BRANCO) {
-      visitaBP(v, grafo, &tempo, cor, tempoDescobrimento, tempoTermino, antecessor, menorTempoVertRetorno, vertArticulacao);
+      visitaProfundidade(v, grafo, &tempo, cor, tempoDescobrimento, antecessor, menorTempoVertRetorno, vertArticulacao);
     }
   }
 
-  fprintf(stdout, "\n\nCaminhos BP: \n");
+  fprintf(stdout, "\n\nCaminhos BP:\n");
   for (int v = 0; v < numVertices; v++) {
       if(antecessor[v] == -1) origem = v;
       imprimeCaminhoBuscaProf(origem, v, antecessor);
@@ -91,7 +90,7 @@ void buscaEmProfundidade(Grafo* grafo, int vertArticulacao[]) {
 }
 
 void imprimeVerticesDeArticulacao(Grafo* grafo, int vertArticulacao[]) {
-  fprintf(stdout, "\n\nVertices de Articulacao: \n");
+  fprintf(stdout, "\n\nVertices de Articulacao:\n");
   for (int v = 0; v < grafo->numVertices; v++) 
     if (vertArticulacao[v]) fprintf(stdout, "%d ", v);
   fprintf(stdout, "\n");

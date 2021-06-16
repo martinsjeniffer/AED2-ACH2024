@@ -9,6 +9,12 @@
 #define PRETO 2
 #define INFINITO 1000
 
+/**
+ * Macro que utiliza do operador ternario
+ * para retornar o valor minimo entre dois valores a e b.
+ */
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
 typedef int Peso;
 
 /*
@@ -67,7 +73,6 @@ bool insereAresta(Grafo * grafo, int v1, int v2, Peso peso);
 
 /*
  * bool existeAresta(Grafo * grafo, int v1, int v2):
- * 
  */
 bool existeAresta(Grafo * grafo, int v1, int v2);
 
@@ -102,7 +107,7 @@ void liberaGrafo(Grafo * grafo);
 
 void imprimeGrafo(Grafo* grafo);
 
-void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]);
+void visitaProfundidade(int vertice, Grafo * grafo, int * tempo, int cor[], int tdesc[], int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]);
 
 void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int distancia[]);
 
