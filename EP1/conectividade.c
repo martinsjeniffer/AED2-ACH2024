@@ -23,9 +23,7 @@ bool leGrafo(FILE * arquivoGrafo, Grafo* grafo) {
 
   while(fscanf(arquivoGrafo, "%d %d %d", &v1, &v2, &peso) != EOF) {
     if (insereAresta(grafo, v1, v2, peso)) insereAresta(grafo, v2, v1, peso);
-    else {
-      fprintf(stderr, "Erro ao inserir aresta.\n");
-    }
+    else fprintf(stderr, "Erro ao inserir aresta.\n");
   }
 
   fclose(arquivoGrafo);
@@ -33,27 +31,29 @@ bool leGrafo(FILE * arquivoGrafo, Grafo* grafo) {
 }
 
 void buscaEmLargura(Grafo *grafo) {
-    int numVertices = grafo->numVertices;
-    int cor[numVertices], antecessor[numVertices], distancia[numVertices];
-    int origem;
+  int numVertices = grafo->numVertices;
+  int cor[numVertices], antecessor[numVertices], distancia[numVertices];
+  int origem;
 
-    for (int v = 0; v < numVertices; v++) {
-        cor[v] = BRANCO;
-        antecessor[v] = -1;
-        distancia[v] = INFINITO;
-    }
+  for (int v = 0; v < numVertices; v++) {
+    cor[v] = BRANCO;
+    antecessor[v] = -1;
+    distancia[v] = INFINITO;
+  }
 
-    fprintf(stdout, "\n\nBL: \n");
-    for (int v = 0; v < numVertices; v++) {
-        if (cor[v] == BRANCO) visitaLargura(v, grafo, cor, antecessor, distancia);
+  fprintf(stdout, "\n\nBL: \n");
+  for (int v = 0; v < numVertices; v++) {
+    if (cor[v] == BRANCO) {
+      visitaLargura(v, grafo, cor, antecessor, distancia);
     }
+  }
 
-    fprintf(stdout, "\n\nCaminhos BL: \n");
-    for (int v = 0; v < numVertices; v++) {
-        if (distancia[v] == 0) origem = v;
-        imprimeCaminhoLargura(origem, v, antecessor, distancia);
-      fprintf(stdout, "\n");
-    }
+  fprintf(stdout, "\n\nCaminhos BL: \n");
+  for (int v = 0; v < numVertices; v++) {
+      if (distancia[v] == 0) origem = v;
+      imprimeCaminhoLargura(origem, v, antecessor, distancia);
+    fprintf(stdout, "\n");
+  }
 }
 
 void buscaEmProfundidade(Grafo* grafo, int vertArticulacao[]) {
@@ -75,10 +75,12 @@ void buscaEmProfundidade(Grafo* grafo, int vertArticulacao[]) {
     vertArticulacao[v] = false;
   }
 
-  fprintf(stdout, "\n\nBP: \n");
-  for (int v = 0; v < numVertices; v++)
-    if (cor[v] == BRANCO) visitaBP(v, grafo, &tempo, cor, tempoDescobrimento, tempoTermino, antecessor, menorTempoVertRetorno, vertArticulacao);
-  fprintf(stdout, "\n");
+  fprintf(stdout, "\nBP: \n");
+  for (int v = 0; v < numVertices; v++) {
+    if (cor[v] == BRANCO) {
+      visitaBP(v, grafo, &tempo, cor, tempoDescobrimento, tempoTermino, antecessor, menorTempoVertRetorno, vertArticulacao);
+    }
+  }
 
   fprintf(stdout, "\n\nCaminhos BP: \n");
   for (int v = 0; v < numVertices; v++) {
@@ -88,7 +90,7 @@ void buscaEmProfundidade(Grafo* grafo, int vertArticulacao[]) {
   }
 }
 
-void verticesDeArticulacao(Grafo* grafo, int vertArticulacao[]) {
+void imprimeVerticesDeArticulacao(Grafo* grafo, int vertArticulacao[]) {
   fprintf(stdout, "\n\nVertices de Articulacao: \n");
   for (int v = 0; v < grafo->numVertices; v++) 
     if (vertArticulacao[v]) fprintf(stdout, "%d ", v);
@@ -109,10 +111,9 @@ int main() {
     int vertArticulacao[numVertices];
     buscaEmProfundidade(&grafo, vertArticulacao);
     componentesConexos(&grafo);
-    verticesDeArticulacao(&grafo, vertArticulacao);
+    imprimeVerticesDeArticulacao(&grafo, vertArticulacao);
     liberaGrafo(&grafo);
   }
-
 
   return 0;
 }
