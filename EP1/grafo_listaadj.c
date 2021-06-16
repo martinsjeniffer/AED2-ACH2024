@@ -59,7 +59,7 @@ bool insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
     return false;
   }
 
-  novaAresta->vdest = v2;
+  novaAresta->vertice = v2;
   novaAresta->peso = peso;
   novaAresta->arestaPrincipal = !existeAresta(grafo, v2, v1);
   novaAresta->prox = grafo->listaAdj[v1];
@@ -76,7 +76,7 @@ bool existeAresta(Grafo * grafo, int v1, int v2) {
   if (!verticeValido(grafo, v1) && !verticeValido(grafo, v2)) return false;
   aresta = grafo->listaAdj[v1];
 
-  while (aresta != NULL && aresta->vdest != v2)
+  while (aresta != NULL && aresta->vertice != v2)
     aresta = aresta -> prox;
 
   if (aresta != NULL) return true;
@@ -128,7 +128,7 @@ void imprimeGrafo(Grafo* grafo) {
 
     if (!listaAdjVazia(grafo, i)) {
       while(atual != NULL) {
-        if (atual->arestaPrincipal) fprintf (stdout, "\n%d %d %d", i, atual->vdest, atual->peso);
+        if (atual->arestaPrincipal) fprintf (stdout, "\n%d %d %d", i, atual->vertice, atual->peso);
         atual = proxListaAdj(grafo, i, atual);
       }
     }
@@ -145,27 +145,27 @@ void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tte
   fprintf(stdout, "%d ", v);
 
   if (!listaAdjVazia(grafo, v)) {
-    atual = grafo->listaAdj[v];
+    atual = primeiroListaAdj(grafo, v);
 
     while(atual != NULL) {
-      if (cor[atual->vdest] == BRANCO) {
-        antecessor[atual->vdest] = v;
-        visitaBP(atual->vdest, grafo, tempo, cor, tdesc, tterm, antecessor, menorTempoVertRetorno, vertArticulacao);
+      if (cor[atual->vertice] == BRANCO) {
+        antecessor[atual->vertice] = v;
+        visitaBP(atual->vertice, grafo, tempo, cor, tdesc, tterm, antecessor, menorTempoVertRetorno, vertArticulacao);
 
-        menorTempoVertRetorno[v] = menorTempoVertRetorno[v] < menorTempoVertRetorno[atual->vdest] ? menorTempoVertRetorno[v] : menorTempoVertRetorno[atual->vdest];
+        menorTempoVertRetorno[v] = menorTempoVertRetorno[v] < menorTempoVertRetorno[atual->vertice] ? menorTempoVertRetorno[v] : menorTempoVertRetorno[atual->vertice];
 
         // iremos considerar a raiz da arvore de descoberta como vert de articulacao?
 
         // if (parent[u] == NIL && children > 1)
         //   ap[u] = true;
         
-        if (antecessor[v] != -1 && menorTempoVertRetorno[atual->vdest] >= tdesc[v])
+        if (antecessor[v] != -1 && menorTempoVertRetorno[atual->vertice] >= tdesc[v])
           vertArticulacao[v] = true;
-      } else if (atual->vdest != antecessor[v]) {
-        menorTempoVertRetorno[v] = menorTempoVertRetorno[v] < tdesc[atual->vdest] ? menorTempoVertRetorno[v] : tdesc[atual->vdest];
+      } else if (atual->vertice != antecessor[v]) {
+        menorTempoVertRetorno[v] = menorTempoVertRetorno[v] < tdesc[atual->vertice] ? menorTempoVertRetorno[v] : tdesc[atual->vertice];
       }
 
-      atual = atual->prox;
+      atual = proxListaAdj(grafo, v, atual);
     }
   }
 
@@ -180,28 +180,28 @@ void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int di
   antecessor[origem] = origem;
 
   PFILA Fila = inicializarFila();
-  PONT w;
+  PONT elemento;
   Apontador atual;
   inserirElemento(Fila, origem);
 
   while (Fila->numElementos != 0) {
-    w = removePrimeiro(Fila);
-    fprintf(stdout, "%d ", w->id);
+    elemento = retiraPrimeiroElemento(Fila);
+    fprintf(stdout, "%d ", elemento->id);
 
-    if (!listaAdjVazia(grafo, w->id)) {
-      atual = grafo->listaAdj[w->id];
+    if (!listaAdjVazia(grafo, elemento->id)) {
+      atual = grafo->listaAdj[elemento->id];
       while(atual != NULL) {
-        if(cor[atual->vdest] == BRANCO) {
-          cor[atual->vdest] = CINZA;
-          antecessor[atual->vdest] = w->id;
-          distancia[atual->vdest] = distancia[w->id] + 1;
-          inserirElemento(Fila, atual->vdest);
+        if(cor[atual->vertice] == BRANCO) {
+          cor[atual->vertice] = CINZA;
+          antecessor[atual->vertice] = elemento->id;
+          distancia[atual->vertice] = distancia[elemento->id] + 1;
+          inserirElemento(Fila, atual->vertice);
         }
         atual = atual->prox;
       }
     }
 
-    cor[w->id] = PRETO;
+    cor[elemento->id] = PRETO;
   }
 }
 
@@ -254,8 +254,8 @@ void verificaVerticeComponenteConexo(Grafo * grafo, int componenteConexo[], int 
   Apontador atual = grafo->listaAdj[vertice];
 
   while (atual != NULL) {
-    if(componenteConexo[atual->vdest] == -1) {
-      verificaVerticeComponenteConexo(grafo, componenteConexo, atual->vdest, idComponente);
+    if(componenteConexo[atual->vertice] == -1) {
+      verificaVerticeComponenteConexo(grafo, componenteConexo, atual->vertice, idComponente);
     }
     atual = atual->prox;
   }

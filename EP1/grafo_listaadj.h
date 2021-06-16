@@ -12,12 +12,12 @@ typedef int Peso;
 
 /*
  * Tipo estruturado Aresta
- *      vdest: vertice destino
+ *      vertice: vertice destino
  *      peso: peso da aresta
  *      str_aresta: ponteiro para a prox aresta
  */
 typedef struct str_aresta {
-    int vdest;
+    int vertice;
     Peso peso;
     struct str_aresta * prox;
     bool arestaPrincipal;
@@ -101,11 +101,7 @@ void liberaGrafo(Grafo * grafo);
 
 void imprimeGrafo(Grafo* grafo);
 
-// void buscaProfundidade(Grafo* grafo);
-
 void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]);
-
-// void buscaEmLargura(Grafo *grafo);
 
 void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int distancia[]);
 

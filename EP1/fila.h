@@ -21,6 +21,6 @@ PONT buscarElemento(PFILA f, int id);
 
 bool inserirElemento(PFILA f, int id);
 
-PONT removePrimeiro(PFILA f);
+PONT retiraPrimeiroElemento(PFILA f);
 
 void exibirLog(PFILA f);

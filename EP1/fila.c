@@ -46,7 +46,7 @@ bool inserirElemento(PFILA f, int id) {
   return true;
 }
 
-PONT removePrimeiro(PFILA f) {
+PONT retiraPrimeiroElemento(PFILA f) {
   if (tamanho(f) == 0) return NULL;
   PONT resposta;
   PONT primeiroElemento = f->ini->prox;
