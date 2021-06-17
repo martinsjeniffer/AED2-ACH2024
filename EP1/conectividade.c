@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "grafo_listaadj.h"
-/* ex de chamada: ./grafo.exe < entrada.txt > saida.txt 2> erro.txt */
+/* ex de chamada: valgrind ./grafo.exe < entrada.txt > saida.txt 2> erro.txt */
 
 void leGrafo(FILE * arquivoGrafo, Grafo* grafo) {
   int nVertices, nArestas;
@@ -30,12 +30,15 @@ void leGrafo(FILE * arquivoGrafo, Grafo* grafo) {
 
 int main() {
   Grafo grafo;
+  stdin = fopen("./entrada.txt", "r");
+  stdout = fopen("./saida.txt", "w+");
+  stderr = fopen("./erro.txt", "w+");
 
-  if(stdin) leGrafo(stdin, &grafo);
+  leGrafo(stdin, &grafo);
 
   imprimeGrafo(&grafo);
-  // buscaEmLargura(&grafo);
-  // buscaProfundidade(&grafo);
+  buscaEmLargura(&grafo);
+  buscaProfundidade(&grafo);
   componentesConexos(&grafo);
   liberaGrafo(&grafo);
 

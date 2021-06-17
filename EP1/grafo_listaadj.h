@@ -20,6 +20,7 @@ typedef struct str_aresta {
     int vdest;
     Peso peso;
     struct str_aresta * prox;
+    bool arestaPrincipal;
 } Aresta;
 
 typedef Aresta * Apontador;
@@ -102,13 +103,15 @@ void imprimeGrafo(Grafo* grafo);
 
 void buscaProfundidade(Grafo* grafo);
 
-void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[]);
+void visitaBP(int v, Grafo * grafo, int * tempo, int cor[], int tdesc[], int tterm[], int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]);
 
 void buscaEmLargura(Grafo *grafo);
 
 void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int distancia[]);
 
 void imprimeCaminhoLargura(int u, int v, int antecessor[], int distancia[]);
+
+void imprimeCaminhoBuscaProf(int origem, int v, int antecessor[]);
 
 void componentesConexos(Grafo * grafo);
 
