@@ -4,9 +4,9 @@
 #define VERTICE_INVALIDO -1 /* numero de vertice invalido ou ausente */
 #define MAX_VERTICES 100
 
-#define BRANCO 0
-#define CINZA 1
-#define PRETO 2
+#define BRANCO 0    // nao visitado
+#define CINZA 1     // primeira visita
+#define PRETO 2     // todos os vertices adjacentes visitados
 #define INFINITO 1000
 
 /*
