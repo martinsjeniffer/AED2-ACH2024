@@ -14,7 +14,7 @@ void verificaVerticeComponenteConexo(Grafo * grafo, int componenteConexo[], int 
     if(componenteConexo[atual->vertice] == -1) {
       verificaVerticeComponenteConexo(grafo, componenteConexo, atual->vertice, idComponente);
     }
-    atual = proxListaAdj(grafo, vertice, atual);
+    atual = proxListaAdj(grafo, atual);
   }
 }
 

@@ -69,7 +69,7 @@ void visitaProfundidade(int vertice, Grafo * grafo, int * tempo, int cor[], int 
         menorTempoVertRetorno[vertice] = MIN(menorTempoVertRetorno[vertice], tdesc[atual->vertice]);
       }
 
-      atual = proxListaAdj(grafo, vertice, atual);
+      atual = proxListaAdj(grafo, atual);
     }
   }
 

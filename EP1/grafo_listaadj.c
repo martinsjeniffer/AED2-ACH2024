@@ -87,17 +87,17 @@ bool existeAresta(Grafo * grafo, int v1, int v2) {
   return false;
 }
 
-bool listaAdjVazia(Grafo * grafo, int v) {
-  if (!verticeValido(grafo, v)) return false;
+bool listaAdjVazia(Grafo * grafo, int vertice) {
+  if (!verticeValido(grafo, vertice)) return false;
 
-  return (grafo->listaAdj[v] == NULL);
+  return (grafo->listaAdj[vertice] == NULL);
 }
 
-Apontador primeiroListaAdj(Grafo * grafo, int v) {
-  return (grafo->listaAdj[v]);
+Apontador primeiroListaAdj(Grafo * grafo, int vertice) {
+  return (grafo->listaAdj[vertice]);
 }
 
-Apontador proxListaAdj(Grafo * grafo, int v, Apontador atual) {
+Apontador proxListaAdj(Grafo * grafo, Apontador atual) {
   if (atual == NULL) {
     fprintf(stderr, "ERRO: Aresta atual eh NULL");
     return false;
@@ -132,7 +132,7 @@ void imprimeGrafo(Grafo* grafo) {
     if (!listaAdjVazia(grafo, vertice)) {
       while (atual != NULL) {
         if (atual->arestaPrincipal) fprintf (stdout, "\n%d %d %d", vertice, atual->vertice, atual->peso);
-        atual = proxListaAdj(grafo, vertice, atual);
+        atual = proxListaAdj(grafo, atual);
       }
     }
   }

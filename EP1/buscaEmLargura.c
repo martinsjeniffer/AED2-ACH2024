@@ -56,7 +56,7 @@ void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int di
           distancia[atual->vertice]++;
           inserirElemento(Fila, atual->vertice);
         }
-        atual = proxListaAdj(grafo, elemento->id, atual);
+        atual = proxListaAdj(grafo, atual);
       }
     }
 
