@@ -106,15 +106,3 @@ Apontador proxListaAdj(Grafo * grafo, int v, Aresta * atual);
 void liberaGrafo(Grafo * grafo);
 
 void imprimeGrafo(Grafo* grafo);
-
-void visitaProfundidade(int vertice, Grafo * grafo, int * tempo, int cor[], int tdesc[], int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]);
-
-void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int distancia[]);
-
-void imprimeCaminhoLargura(int u, int v, int antecessor[], int distancia[]);
-
-void imprimeCaminhoBuscaProf(int origem, int v, int antecessor[]);
-
-void componentesConexos(Grafo * grafo);
-
-void verificaVerticeComponenteConexo(Grafo * grafo, int componenteConexo[], int vertice, int idComponente);
