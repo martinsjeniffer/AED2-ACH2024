@@ -1,5 +1,9 @@
 #include "fila.h"
 
+/*
+ * Interface e API de filas feitas durante
+ * aulas de AED1 com professor Luciano Digiampietri.
+ */
 PFILA inicializarFila() {
   PFILA fila = (PFILA) malloc(sizeof(FILA));
   PONT cabeca = (PONT) malloc(sizeof(ELEMENTO));

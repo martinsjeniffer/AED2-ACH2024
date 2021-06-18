@@ -43,6 +43,7 @@ void buscaEmProfundidade(Grafo* grafo, int vertArticulacao[]) {
 void visitaProfundidade(int vertice, Grafo * grafo, int * tempo, int cor[], int tdesc[],
                         int antecessor[], int menorTempoVertRetorno[], int vertArticulacao[]) {
   Apontador atual;
+  int filhos = 0;
 
   cor[vertice] = CINZA; 
   tdesc[vertice] = menorTempoVertRetorno[vertice] = ++(*tempo);
@@ -50,26 +51,26 @@ void visitaProfundidade(int vertice, Grafo * grafo, int * tempo, int cor[], int 
   fprintf(stdout, "%d ", vertice);
 
   if (!listaAdjVazia(grafo, vertice)) {
-    atual = primeiroListaAdj(grafo, vertice);
-
-    while(atual != NULL) {
+    for (atual = primeiroListaAdj(grafo, vertice); atual != NULL; atual = proxListaAdj(grafo, atual)) {
       if (cor[atual->vertice] == BRANCO) {
+        filhos++;
         antecessor[atual->vertice] = vertice;
+
         visitaProfundidade(atual->vertice, grafo, tempo, cor, tdesc, 
                           antecessor, menorTempoVertRetorno, vertArticulacao);
 
         menorTempoVertRetorno[vertice] = MIN(menorTempoVertRetorno[vertice], menorTempoVertRetorno[atual->vertice]);
-        // iremos considerar a raiz da arvore de descoberta como vert de articulacao?
-        // if (parent[u] == NIL && children > 1)
-        //   ap[u] = true;
-        
-        if (antecessor[vertice] != -1 && menorTempoVertRetorno[atual->vertice] >= tdesc[vertice])
+
+        if (antecessor[vertice] == -1 && filhos > 1) {
           vertArticulacao[vertice] = true;
+        }
+        
+        if (antecessor[vertice] != -1 && menorTempoVertRetorno[atual->vertice] >= tdesc[vertice]) {
+          vertArticulacao[vertice] = true;
+        }
       } else if (atual->vertice != antecessor[vertice]) {
         menorTempoVertRetorno[vertice] = MIN(menorTempoVertRetorno[vertice], tdesc[atual->vertice]);
       }
-
-      atual = proxListaAdj(grafo, atual);
     }
   }
 

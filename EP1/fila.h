@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+/*
+ * Interface e API de filas feitas durante
+ * aulas de AED1 com professor Luciano Digiampietri.
+ */
 typedef struct aux {
   int id;
   struct aux* ant;

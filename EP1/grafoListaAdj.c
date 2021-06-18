@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "grafo_listaadj.h"
+#include "grafoListaAdj.h"
 
 bool inicializaGrafo(Grafo * grafo, int numVertices) {
   if (numVertices <= 0) {
-    fprintf(stderr, "ERRO [inicializaGrafo linha ***]: Numero de vertices deve ser positivo.\n");
+    fprintf(stderr, "ERRO [inicializaGrafo linha ***]: Numero de vertices deve ser positivo ou maior que zero.\n");
     return false;
   }
 
@@ -99,7 +99,7 @@ Apontador primeiroListaAdj(Grafo * grafo, int vertice) {
 
 Apontador proxListaAdj(Grafo * grafo, Apontador atual) {
   if (atual == NULL) {
-    fprintf(stderr, "ERRO: Aresta atual eh NULL");
+    fprintf(stderr, "ERRO [proxListaAdj linha ***]: Aresta atual eh NULL");
     return false;
   }
 

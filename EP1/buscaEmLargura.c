@@ -75,16 +75,13 @@ void visitaLargura(int origem, Grafo *grafo, int cor[], int antecessor[], int di
     fprintf(stdout, "%d ", elemento->id);
 
     if (!listaAdjVazia(grafo, elemento->id)) {
-      atual = primeiroListaAdj(grafo, elemento->id);
-
-      while (atual != NULL) {
+      for (atual = primeiroListaAdj(grafo, elemento->id); atual != NULL; atual = proxListaAdj(grafo, atual)) {
         if (cor[atual->vertice] == BRANCO) {
           cor[atual->vertice] = CINZA;
           antecessor[atual->vertice] = elemento->id;
           distancia[atual->vertice]++;
           inserirElemento(Fila, atual->vertice);
         }
-        atual = proxListaAdj(grafo, atual);
       }
     }
 
