@@ -7,70 +7,68 @@
 PFILA inicializarFila() {
   PFILA fila = (PFILA) malloc(sizeof(FILA));
   PONT cabeca = (PONT) malloc(sizeof(ELEMENTO));
-  fila->ini = cabeca;
-  fila->numElementos = 0;
+  fila->inicio = cabeca;
+  fila->elementosNaFila = 0;
 
-  cabeca->ant  = cabeca;
+  cabeca->ant = cabeca;
   cabeca->prox = cabeca;
-  cabeca->id   = -1;
+  cabeca->id = -1;
 
   return fila;
 }
 
 int tamanho(PFILA fila) {
-  return fila->numElementos;
+  return fila->elementosNaFila;
 }
 
-PONT buscarElemento(PFILA f, int id){
-  PONT atual = f->ini;
-  while (atual != f->ini) {
+PONT buscarElemento(PFILA fila, int id) {
+  PONT atual;
+
+  for (atual = fila->inicio; atual != fila->inicio; atual = atual->prox) {
     if (atual->id == id) return atual;
-    atual = atual->prox;
   }
 
   return NULL;
 }
 
-bool inserirElemento(PFILA f, int id) {
-  if(id < 0 || buscarElemento(f,id) != NULL) return false;
+bool inserirElemento(PFILA fila, int id) {
+  if (id < 0) {
+    fprintf(stderr, "ERRO [fila linha 37]: Id do elemento deve ser positivo.\n");
+    return false;
+  }
+
+  if (buscarElemento(fila, id) != NULL) {
+    fprintf(stderr, "ERRO [fila linha 41]: O id (%d) já consta na fila.\n", id);
+    return false;
+  }
 
   PONT elemento = (PONT)malloc(sizeof(ELEMENTO));
-  PONT atual = f->ini->prox;
+  PONT atual = fila->inicio->prox;
 
   while (atual->id != -1) atual = atual->prox;
 
-  elemento->id   = id;
-  elemento->ant  = atual->ant;
+  elemento->id = id;
+  elemento->ant = atual->ant;
   elemento->prox = atual;
 
   atual->ant->prox = elemento;
-  atual->ant       = elemento;
+  atual->ant  = elemento;
 
-  f->numElementos++;
+  fila->elementosNaFila++;
   return true;
 }
 
-PONT retiraPrimeiroElemento(PFILA f) {
-  if (tamanho(f) == 0) return NULL;
+PONT retiraPrimeiroElemento(PFILA fila) {
+  if (tamanho(fila) == 0) return NULL;
+
   PONT resposta;
-  PONT primeiroElemento = f->ini->prox;
+  PONT primeiroElemento = fila->inicio->prox;
 
   primeiroElemento->ant->prox = primeiroElemento->prox;
   primeiroElemento->prox->ant = primeiroElemento->ant;
 
   resposta = primeiroElemento;
 
-  f->numElementos--;
+  fila->elementosNaFila--;
   return resposta;
-}
-
-void exibirLog(PFILA f){
-  printf("Log [elementos: %i (alem do no cabeca)]\n", tamanho(f));
-  PONT atual = f->ini->prox;
-  printf(" [ ");
-  while (atual != f->ini){
-    printf(" %i", atual->id);
-    atual = atual->prox;
-  }
-  printf(" ]\n");
 }

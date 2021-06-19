@@ -4,19 +4,19 @@
 
 bool inicializaGrafo(Grafo * grafo, int numVertices) {
   if (numVertices <= 0) {
-    fprintf(stderr, "ERRO [inicializaGrafo linha ***]: Numero de vertices deve ser positivo ou maior que zero.\n");
+    fprintf(stderr, "ERRO [inicializaGrafo linha 7]: Numero de vertices deve ser positivo ou maior que zero.\n");
     return false;
   }
 
   if (numVertices > MAX_VERTICES) {
-    fprintf(stderr, "ERRO [inicializaGrafo linha ***]: Numero de vertices deve ser menor que 100.\n");
+    fprintf(stderr, "ERRO [inicializaGrafo linha 12]: Numero de vertices deve ser menor que 100.\n");
     return false;
   }
 
   grafo->numVertices = numVertices;
 
   if (!(grafo->listaAdj = (Apontador*) calloc(numVertices + 1, sizeof(Apontador)))) {
-    fprintf(stderr, "ERRO [inicializaGrafo linha ***]: Falha na alocacao de memoria na funcao inicializaGrafo\n");
+    fprintf(stderr, "ERRO [inicializaGrafo linha 19]: Falha na alocacao de memoria na funcao inicializaGrafo\n");
     return false;
   }
 
@@ -28,12 +28,12 @@ bool inicializaGrafo(Grafo * grafo, int numVertices) {
 
 bool verticeValido(Grafo * grafo, int vertice) {
   if (vertice > grafo->numVertices) {
-    fprintf(stderr, "ERRO [verticeValido linha ***]: Numero do vertice (%d) maior que o numero total de vertices (%d)\n", vertice, grafo->numVertices);
+    fprintf(stderr, "ERRO [verticeValido linha 31]: Numero do vertice (%d) maior que o numero total de vertices (%d)\n", vertice, grafo->numVertices);
     return false;
   }
 
   if (vertice < 0) {
-    fprintf(stderr, "ERRO [verticeValido linha ***]: Numero do vertice (%d) deve ser positivo\n", vertice);
+    fprintf(stderr, "ERRO [verticeValido linha 36]: Numero do vertice (%d) deve ser positivo\n", vertice);
     return false;
   }
 
@@ -44,22 +44,22 @@ bool insereAresta(Grafo * grafo, int v1, int v2, Peso peso) {
   Apontador novaAresta;
 
   if (v1 == v2){
-    fprintf(stderr, "ERRO [insereAresta linha ***]: Grafo nao direcionado nao tem self-loop.\n");
+    fprintf(stderr, "ERRO [insereAresta linha 47]: Grafo nao direcionado nao tem self-loop.\n");
     return false;
   } 
 
   if (!verticeValido(grafo, v1) || !verticeValido(grafo, v2)) {
-    fprintf(stderr, "ERRO [insereAresta linha ***]: Vertice invalido.\n");
+    fprintf(stderr, "ERRO [insereAresta linha 52]: Vertice invalido.\n");
     return false;
   }
 
   if (existeAresta(grafo, v1, v2)) {
-    fprintf(stderr, "ERRO [insereAresta linha ***]: A aresta (%d,%d) ja existe.\n", v1, v2);
+    fprintf(stderr, "ERRO [insereAresta linha 57]: A aresta (%d,%d) ja existe.\n", v1, v2);
     return false;
   }
 
   if (!(novaAresta = (Apontador) calloc(1, sizeof(Apontador)))) {
-    fprintf(stderr, "ERRO [insereAresta linha ***]: Falha na alocacao de memoria.\n");
+    fprintf(stderr, "ERRO [insereAresta linha 62]: Falha na alocacao de memoria.\n");
     return false;
   }
 
@@ -99,7 +99,7 @@ Apontador primeiroListaAdj(Grafo * grafo, int vertice) {
 
 Apontador proxListaAdj(Grafo * grafo, Apontador atual) {
   if (atual == NULL) {
-    fprintf(stderr, "ERRO [proxListaAdj linha ***]: Aresta atual eh NULL");
+    fprintf(stderr, "ERRO [proxListaAdj linha 102]: Aresta atual eh NULL");
     return false;
   }
 
