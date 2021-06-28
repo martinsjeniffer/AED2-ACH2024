@@ -1,0 +1,34 @@
+6 4
+0 4 1
+1 2 5
+1 3 7
+2 4 2
+
+BL:
+0 4 2 1 3 5 
+
+Caminhos BL:
+0 
+0 4 2 1 
+0 4 2 
+0 4 2 1 3 
+0 4 
+5 
+
+BP:
+0 4 2 1 3 5 
+
+Caminhos BP:
+0 
+0 4 2 1 
+0 4 2 
+0 4 2 1 3 
+0 4 
+5 
+
+Componentes Conectados:
+C1: 0 1 2 3 4 
+C2: 5 
+
+Vertices de Articulacao:
+1 2 4 

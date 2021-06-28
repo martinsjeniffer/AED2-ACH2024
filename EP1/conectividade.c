@@ -1,31 +1,36 @@
 #include <stdio.h>
-#include "grafo_listaadj.h"
-/* ex de chamada: valgrind ./grafo.exe < entrada.txt > saida.txt 2> erro.txt */
+#include "grafoListaAdj.h"
+#include "buscaEmLargura.c"
+#include "buscaEmProfundidade.c"
+#include "componentesConexos.c"
 
-void leGrafo(FILE * arquivoGrafo, Grafo* grafo) {
+bool leGrafoPorArquivo(FILE * arquivoGrafo, Grafo * grafo) {
   int nVertices, nArestas;
   int v1, v2;
   Peso peso;
 
-  if(arquivoGrafo == NULL) {
-    fprintf(stderr, "O arquivo não existe!");
-    return;
+  if (arquivoGrafo == NULL) {
+    fprintf(stderr, "ERRO [leGrafoPorArquivo linha 13]: O arquivo não existe!\n");
+    return false;
   }
 
   if (!fscanf(arquivoGrafo, "%d %d", &nVertices, &nArestas)) {
-    fprintf(stderr, "Problemas ao ler nVertices e nArestas");
-    return;
+    fprintf(stderr, "ERRO [leGrafoPorArquivo linha 18]: Problemas ao ler nVertices e nArestas\n");
+    return false;
   }
 
-  inicializaGrafo(grafo, nVertices);
+  if (!inicializaGrafo(grafo, nVertices)) {
+    fprintf(stderr, "ERRO [leGrafoPorArquivo linha 23]: Erro ao inicializar o grafo\n");
+    return false;
+  }
 
-  while(fscanf(arquivoGrafo, "%d %d %d", &v1, &v2, &peso) != EOF) {
-    insereAresta(grafo, v1, v2, peso);
-    insereAresta(grafo, v2, v1, peso);
+  while (fscanf(arquivoGrafo, "%d %d %d", &v1, &v2, &peso) != EOF) {
+    if (insereAresta(grafo, v1, v2, peso)) insereAresta(grafo, v2, v1, peso);
+    else fprintf(stderr, "ERRO [leGrafoPorArquivo linha 29]: Erro ao inserir aresta.\n");
   }
 
   fclose(arquivoGrafo);
-  return;
+  return true;
 }
 
 int main() {
@@ -34,13 +39,17 @@ int main() {
   stdout = fopen("./saida.txt", "w+");
   stderr = fopen("./erro.txt", "w+");
 
-  leGrafo(stdin, &grafo);
+  if (leGrafoPorArquivo(stdin, &grafo)) {
+    imprimeGrafo(&grafo);
+    buscaEmLargura(&grafo);
 
-  imprimeGrafo(&grafo);
-  buscaEmLargura(&grafo);
-  buscaProfundidade(&grafo);
-  componentesConexos(&grafo);
-  liberaGrafo(&grafo);
+    int numVertices = grafo.numVertices;
+    int vertArticulacao[numVertices];
+    buscaEmProfundidade(&grafo, vertArticulacao);
+    componentesConexos(&grafo);
+    imprimeVerticesDeArticulacao(&grafo, vertArticulacao);
+    liberaGrafo(&grafo);
+  }
 
   return 0;
 }
