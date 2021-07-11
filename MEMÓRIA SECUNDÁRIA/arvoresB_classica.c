@@ -30,7 +30,7 @@ void leNoDisco (int x) {
 }
 
 NO * busca (NO * x, int k) {
-  int i = 1;
+  int i = 0;
   while (i <= x->numChaves && k > x->chave[i]) {
     i++;
   }
@@ -43,8 +43,8 @@ NO * busca (NO * x, int k) {
     return NULL;
   }
   else {
-    leNoDisco(x->chave[i]);
-    return busca(x->chave[i], k);
+    leNoDisco(x->filho[i]);
+    return busca(x->filho[i], k);
   }
 }
 
@@ -59,12 +59,12 @@ void BTreeSplitChild(NO * x, int i, NO * y) {
   // revisar esses for's, já que iniciaremos
   // sempre da posicao 0 e nao da 1, como aqui descrito
   for (int j = 1; j <= t -1; j++) {
-    z->chave[j] = y->chave[j+1];
+    z->filho[j] = y->filho[j+1];
   }
 
   if (!y->folha) {
     for (int j = 1; j <= t; j++) {
-      z->chave[j] = y->chave[j+1];
+      z->filho[j] = y->filho[j+1];
     }
   }
 
@@ -72,7 +72,11 @@ void BTreeSplitChild(NO * x, int i, NO * y) {
   y->numChaves = t - 1;
 
   // AJUSTE NO x
+  for (int j = x->numChaves + 1; j > i + 1; j--) {
+    x->filho[j+1] = x->filho[j];
+  }
 
+  x->filho[i+1] = z;
 
   for (int j = x->numChaves; j > i; j--) {
     x->chave[j+1] = x->chave[j];
@@ -96,7 +100,7 @@ void BTreeInsert(ArvB * T, int k) {
     s = (NO *) malloc(sizeof(NO));
     T->raiz = s;
     s->folha = false;
-    s->chave[0] = r;
+    s->filho[0] = r;
     BTreeSplitChild(s, 1, r);
     BTreeInsertNonFull(s,k);
   }
@@ -117,14 +121,27 @@ void BTreeInsertNonFull(NO * x, int k) {
     x->numChaves++;
     escreveNoDisco(x);
   } else {
-    while (i <= 1 && k < x->chave[i]) { i--; }
+    while (i >= 1 && k < x->chave[i]) { i--; }
     i++;
-    escreveNoDisco(x->chave[i]);
+    escreveNoDisco(x->filho[i]);
 
-    if (x->numChaves == 2*t - 1) {
-      BTreeSplitChild(x, i, x->chave[i]);
+    if (x->filho[i]->numChaves == 2*t - 1) {
+      BTreeSplitChild(x, i, x->filho[i]);
       if (k > x->chave[i]) { i++; }
     }
-    BTreeInsertNonFull(x->chave[i], k);
+    BTreeInsertNonFull(x->filho[i], k);
   }
 }
+
+void BTreeDeleteFromRoot (ArvB * T, int k) {
+  NO * r = T->raiz;
+
+  if (r->numChaves == 0) return; // arvore vazia
+  else BTreeDelete(r, k);
+
+  if (r->numChaves == 0  && !r->folha) {
+    T->raiz = r->filho[0];
+    free(r);
+  }
+}
+
