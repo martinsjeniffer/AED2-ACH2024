@@ -27,10 +27,6 @@ NO * criaNo(){
   return novoNo;
 }
 
-NO * inicializa(){
-  return NULL;
-}
-
 NO * busca(NO * x, int key){
   if (!x) return NULL;
 
@@ -53,16 +49,26 @@ NO * busca(NO * x, int key){
 
 void imprimeArvore(NO * no, int andar) {
   if (no) {
+    if (no->numChaves == 0) {
+      fprintf(stdout, "Vazia");
+      return;
+    }
+
     int i;
     fprintf(stdout, "(");
     for(i = 0; i <= no->numChaves - 1; i++) {
       imprimeArvore(no->filho[i], andar + 1);
 
-      if (i == no->numChaves - 1 || (i != no->numChaves && i != 0)){
+      if (i != 0 &&
+         (i == no->numChaves - 1 || i != no->numChaves)) {
         fprintf(stdout, " ");
       }
 
+      if (i <= andar && !no->folha) fprintf(stdout, " ");
+
       fprintf(stdout, "%d", no->chave[i]);
+
+      if (!no->folha) fprintf(stdout, " ");
     }
     imprimeArvore(no->filho[i], andar + 1);
     fprintf(stdout, ")");
@@ -225,7 +231,8 @@ bool leArvorePorArquivo(FILE * arquivo, NO * arvore) {
 }
 
 int main(int argc, char *argv[]) {
-  NO * arvore = inicializa();
+  NO * arvore = criaNo();
+
   stdin = fopen(argv[1], "r");
   stdout = fopen(argv[2], "w");
 
