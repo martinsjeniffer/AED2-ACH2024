@@ -2,201 +2,221 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-const int t = 3;
+#define t 3
+#define MAX_CHAVE 2 * t - 1
+#define MAX_FILHOS 2 * t
 
 typedef struct arvbm{
-  int nchaves, folha, *chave;
+  int numChaves, folha, *chave;
   struct arvbm **filho, *prox;
-}TABM;
+} NO;
 
+NO * criaNo(){
+  NO * novoNo = (NO *) malloc (sizeof(NO));
 
-TABM *cria(int t){
-  TABM* novo = (TABM*)malloc(sizeof(TABM));
-  novo->nchaves = 0;
-  novo->chave =(int*)malloc(sizeof(int)*((t*2)-1));
-  novo->folha = 1;
-  novo->filho = (TABM**)malloc(sizeof(TABM*)*t*2);
-  novo->prox = NULL;
-  int i;
-  for(i=0; i<(t*2); i++) novo->filho[i] = NULL;
-  return novo;
+  novoNo->chave = (int *) malloc (sizeof(int) * MAX_CHAVE);
+  novoNo->folha = true;
+  novoNo->filho = (NO **) malloc(sizeof(NO *) * MAX_FILHOS);
+  novoNo->prox  = NULL;
+
+  novoNo->numChaves = 0;
+
+  for(int i = 0; i < MAX_FILHOS; i++)
+    novoNo->filho[i] = NULL;
+
+  return novoNo;
 }
 
-
-TABM *inicializa(void){
+NO * inicializa(){
   return NULL;
 }
 
-void libera(TABM *a){
-  if(a){
-    if(!a->folha){
-      int i;
-      for(i = 0; i <= a->nchaves; i++) libera(a->filho[i]);
-    }
-    free(a->chave);
-    free(a);
-  }
-}
+NO * busca(NO * x, int key){
+  if (!x) return NULL;
 
-TABM *busca(TABM *a, int mat){
-  if (!a) return NULL;
   int i = 0;
-  while ((i < a->nchaves) && (mat > a->chave[i])) i++;
-  if ((i < a->nchaves) && (a->folha) && (mat == a->chave[i])) return a;
-  if (a-> folha) return NULL;
-  if (a->chave[i] == mat) i++;
-  return busca(a->filho[i], mat);
-}
 
-void imprime(TABM * no, int andar) {
-  if(no) {
-    int i, j;
-    printf("(");
-
-    for(i = 0; i <= no->nchaves-1; i++) {
-      
-      imprime(no->filho[i], andar + 1);
-
-      if(i == no->nchaves-1 || (i != 0 && i != no->nchaves)) printf(" ");
-      
-      printf("%d", no->chave[i]);
-
-      // if(i == no->nchaves-1) printf(" ");
-    }
-    imprime(no->filho[i], andar + 1);
-    printf(")");
+  while ((i <= x->numChaves) && (key > x->chave[i])) {
+    i++;
   }
-}
 
-TABM *divisao(TABM *x, int i, TABM* y, int t){
-  TABM *z = cria(t);
-  z->folha = y->folha;
-  int j;
-  if(!y->folha){
-    z->nchaves = t-1;
-    for(j=0;j<t-1;j++) z->chave[j] = y->chave[j+t];
-    for(j=0;j<t;j++){
-      z->filho[j] = y->filho[j+t];
-      y->filho[j+t] = NULL;
-    }
-  }
-  else {
-    z->nchaves = t; 
-    for(j=0;j < t;j++) z->chave[j] = y->chave[j+t-1];
-    y->prox = z;
-  }
-  y->nchaves = t-1;
-  for(j=x->nchaves; j>=i; j--) x->filho[j+1]=x->filho[j];
-  x->filho[i] = z;
-  for(j=x->nchaves; j>=i; j--) x->chave[j] = x->chave[j-1];
-  x->chave[i-1] = y->chave[t-1];
-  x->nchaves++;
-  return x;
-}
-
-
-TABM *insere_nao_completo(TABM *x, int mat, int t){
-  int i = x->nchaves-1;
-  if(x->folha){
-    while((i>=0) && (mat < x->chave[i])){
-      x->chave[i+1] = x->chave[i];
-      i--;
-    }
-    x->chave[i+1] = mat;
-    x->nchaves++;
+  if ((i <= x->numChaves) && (x->folha) && (key == x->chave[i])) {
     return x;
   }
-  while((i>=0) && (mat < x->chave[i])) i--;
-  i++;
-  if(x->filho[i]->nchaves == ((2*t)-1)){
-    x = divisao(x, (i+1), x->filho[i], t);
-    if(mat > x->chave[i]) i++;
-  }
-  x->filho[i] = insere_nao_completo(x->filho[i], mat, t);
-  return x;
+
+  if (x-> folha) return NULL;
+
+  if (x->chave[i] == key) i++;
+
+  return busca(x->filho[i], key);
 }
 
-TABM *insere(TABM *T, int mat, int t){
-  if(busca(T, mat)) return T;
-  if(!T){
-    T=cria(t);
-    T->chave[0] = mat;
-    T->nchaves=1;
-    return T;
-  }
-  if(T->nchaves == (2*t)-1){
-    TABM *S = cria(t);
-    S->nchaves=0;
-    S->folha = 0;
-    S->filho[0] = T;
-    S = divisao(S,1,T,t);
-    S = insere_nao_completo(S, mat, t);
-    return S;
-  }
-  T = insere_nao_completo(T, mat, t);
-  return T;
-}   
+void imprimeArvore(NO * no, int andar) {
+  if (no) {
+    int i;
+    fprintf(stdout, "(");
+    for(i = 0; i <= no->numChaves - 1; i++) {
+      imprimeArvore(no->filho[i], andar + 1);
 
-// void remove(TABM* arvore, int mat, int t){
-// /*     TABM *a = buscaPai(arvore,mat);
-//     int i = 0;
-//     while ((i < a->nchaves) && (mat > a->chave[i])) i++;
-//     if(a->filho[i + 1]->folha){//caso 1
-//         a->filho[i+1] = removeCaso1(a->filho[i+1],mat);
-//         return;
-//     } */
-//     return;
-// }
+      if (i == no->numChaves - 1 || (i != no->numChaves && i != 0)){
+        fprintf(stdout, " ");
+      }
 
-TABM* buscaPai(TABM* a, int mat){
+      fprintf(stdout, "%d", no->chave[i]);
+    }
+    imprimeArvore(no->filho[i], andar + 1);
+    fprintf(stdout, ")");
+  }
+}
+
+NO * splitNode(NO * noNaoCheio, int index, NO * noCheio){
+  NO * novo = criaNo();
+  novo->folha = noCheio->folha;
+
+  if (!noCheio->folha) {
+    novo->numChaves = t - 1;
+
+    for(int j = 0; j < t - 1; j++) {
+      novo->chave[j] = noCheio->chave[j + t];
+    }
+
+    for(int j = 0; j < t; j++){
+      novo->filho[j] = noCheio->filho[j+t];
+      noCheio->filho[j + t] = NULL;
+    }
+  } else {
+    novo->numChaves = t;
+
+    for(int j = 0; j < t; j++) {
+      novo->chave[j] = noCheio->chave[j + t - 1];
+    }
+
+    noCheio->prox = novo;
+  }
+
+  noCheio->numChaves = t - 1;
+
+  for(int j = noNaoCheio->numChaves; j >= index; j--) {
+    noNaoCheio->filho[j + 1] = noNaoCheio->filho[j];
+  }
+
+  noNaoCheio->filho[index] = novo;
+  for(int j = noNaoCheio->numChaves; j >= index; j--) {
+    noNaoCheio->chave[j] = noNaoCheio->chave[j - 1];
+  }
+
+  noNaoCheio->chave[index - 1] = noCheio->chave[t - 1];
+  noNaoCheio->numChaves++;
+
+  return noNaoCheio;
+}
+
+NO * insertNaoCheia(NO * noNaoCheio, int key){
+  int i = noNaoCheio->numChaves - 1;
+
+  if(noNaoCheio->folha){
+    while(i >= 0 && (key < noNaoCheio->chave[i])){
+      noNaoCheio->chave[i + 1] = noNaoCheio->chave[i];
+      i--;
+    }
+
+    noNaoCheio->chave[i + 1] = key;
+    noNaoCheio->numChaves++;
+
+    return noNaoCheio;
+  }
+
+  while(i >= 0 && (key < noNaoCheio->chave[i])) { i--; }
+  i++;
+
+  if(noNaoCheio->filho[i]->numChaves == MAX_CHAVE){
+    noNaoCheio = splitNode(noNaoCheio, i + 1, noNaoCheio->filho[i]);
+
+    if(key > noNaoCheio->chave[i]) i++;
+  }
+
+  noNaoCheio->filho[i] = insertNaoCheia(noNaoCheio->filho[i], key);
+  return noNaoCheio;
+}
+
+NO * insere(NO * node, int key){
+  if (busca(node, key)) return node;
+
+  if (!node){
+    node = criaNo();
+    node->chave[0] = key;
+    node->numChaves = 1;
+    return node;
+  }
+
+  bool raizCheia = node->numChaves == MAX_CHAVE;
+  if (raizCheia) {
+    NO * novoNo = criaNo();
+
+    novoNo->folha = 0;
+    novoNo->filho[0] = node;
+
+    novoNo = splitNode(novoNo, 1, node);
+    novoNo = insertNaoCheia(novoNo, key);
+    return novoNo;
+  }
+
+  node = insertNaoCheia(node, key);
+  return node;
+}
+
+NO * buscaPai(NO * a, int key){
     if (!a) return NULL;
     int i = 0;
-    while ((i < a->nchaves) && (mat > a->chave[i])) i++;
+    while ((i < a->numChaves) && (key > a->chave[i])) i++;
     if((a->filho[i]->folha)){
-        TABM* filho = a->filho[i];
+        NO* filho = a->filho[i];
         int j = 0;
-        while ((j < filho->nchaves) && (mat > filho->chave[j])) j++;
-        if ((j < filho->nchaves)  && (mat == filho->chave[j])) return a;
+        while ((j < filho->numChaves) && (key > filho->chave[j])) j++;
+        if ((j < filho->numChaves)  && (key == filho->chave[j])) return a;
     }
     if (a-> folha) return NULL;
-    if (a->chave[i] == mat) i++;
-    return busca(a->filho[i], mat);
+    if (a->chave[i] == key) i++;
+    return busca(a->filho[i], key);
 }
 
-/* TABM* removeCaso1(TABM* a, int mat){
-    int i = 0;
-    while (i<a->nchaves){
-        a->chave[i] = a->chave[i+1];
+void libera(NO * node){
+  if (node){
+    if (!node->folha) {
+      for(int i = 0; i <= node->numChaves; i++)
+        libera(node->filho[i]);
     }
-    a->nchaves -= 1;
+
+    free(node->chave);
+    free(node);
+  }
 }
- */
-bool leArvorePorArquivo(FILE * arquivo, TABM * a) {
-  char opcao;
-  int valor;
+
+bool leArvorePorArquivo(FILE * arquivo, NO * arvore) {
+  char comando;
+  int chave;
 
   if (arquivo == NULL) {
-    printf("ERRO [leGrafoPorArquivo linha 13]: O arquivo não existe!\n");
+    printf("ERRO [leArvorePorArquivo]: O arquivo não existe!\n");
     return false;
   }
 
-  while(fscanf(arquivo, "%c %d", &opcao, &valor) != EOF) {
-    switch (opcao) {
+  while(fscanf(arquivo, "%c %d", &comando, &chave) != EOF) {
+    switch (comando) {
       case 'i':
-        a = insere(a, valor, t);
+        arvore = insere(arvore, chave);
       break;
-
       /* case 'r':
-        remove(a, valor, t);
+        remove(a, chave, t);
       break; */
-
       case 'p':
-        imprime(a, 0);
-        printf("\n");
+        imprimeArvore(arvore, 0);
+        fprintf(stdout, "\n");
       break;
-
       case 'f':
-        libera(a);
+        libera(arvore);
+        fclose(arquivo);
+        return true;
     }
   }
 
@@ -205,11 +225,11 @@ bool leArvorePorArquivo(FILE * arquivo, TABM * a) {
 }
 
 int main(int argc, char *argv[]) {
-  TABM * arvore = inicializa();
+  NO * arvore = inicializa();
   stdin = fopen(argv[1], "r");
+  stdout = fopen(argv[2], "w");
 
   leArvorePorArquivo(stdin, arvore);
 
-  imprime(arvore, 0);
   return 0;
 }
